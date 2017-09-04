@@ -60,5 +60,5 @@ def list_write(data, fields, new_filename=None):
 # # Data will not re-sort to the master list yet.
 # from list_read import list_read
 # filename = './input_data/Sample_iPhone_Export.csv'
-# data = list_read(filename)
+# data = list_read(filename, start_line=3, end_line=10)
 # list_write(data, fields)
