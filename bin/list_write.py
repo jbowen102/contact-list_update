@@ -4,14 +4,11 @@ import pandas as pd
 from list_sort import master_field_list
 # comment the above line out if using list_write in list_sort
 
-
-def list_write(data, new_filename=None):
+def date_time_str(form):
     """
-    Takes a pandas DataFrame object, field list, and filename as input.
-    New filename input is optional. Default is date and time.
-    Writes new file. Returns nothing.
-    If there is a file with the same name in the output_data directory,
-    it will be overwritten!
+    Inputs:
+        form - 'short' for date only, 'long' for date and time.
+    Returns string
     """
     # get date and time to put in filename
     # These are integers
@@ -22,17 +19,34 @@ def list_write(data, new_filename=None):
     minute = time.localtime().tm_min
     sec = time.localtime().tm_sec
 
+    date_str = '%.4i-%.2i-%.2i' % (yr, mon, day)
     date_time_str = ('%.4i-%.2i-%.2i' % (yr, mon, day) + '_' +
                      '%.2i%.2i%.2i' % (hr, minute, sec))
 
     # print('Date and time:')
     # print(date_time_str)
+    if form == 'short':
+        return date_str
+    if form == 'long':
+        return date_time_str
+    else:
+        raise ValueError("Input either 'short' or 'long'")
+
+
+def list_write(data, new_filename=None):
+    """
+    Takes a pandas DataFrame object, field list, and filename as input.
+    New filename input is optional. Default is date and time.
+    Writes new file. Returns nothing.
+    If there is a file with the same name in the output_data directory,
+    it will be overwritten!
+    """
 
     fields = data.index.values
 
     # Create new file name if none passed in to function
     if not new_filename:
-        new_filename = './output_data/' + date_time_str + '.csv'
+        new_filename = './output_data/' + date_time_str('long') + '.csv'
 
     # If data is only one row, modify the iterable so it writes correctly.
     if isinstance(data[0:1], str):

@@ -1,4 +1,6 @@
 import pandas as pd
+from list_write import date_time_str
+
 
 def list_add(df_current, df_input):
     """
@@ -14,11 +16,6 @@ def list_add(df_current, df_input):
     # Create copy of master dataframe and add
     df_out = df_current.copy()
 
-
-    # Series containing today's date for entries that are new or modified.
-    # mod_date = pd.Series(['2017-09-04'], index=['Mod Date'])
-
-
     for ser_key in df_input.keys():
 
         # ser_key = df_input.keys()[s]
@@ -28,14 +25,8 @@ def list_add(df_current, df_input):
         # Known issue: Editing a name will cause a duplicate to be added.
         if not ser_key in df_current.keys():
 
-            # Add new Series from the input list to the output.
-            # Update the date-modified field.
-            # new_entry_series = df_input[ser_key]
-            # new_entry_series.append(mod_date)
-            # df_out[ser_key] = new_entry_series
-
             df_out[ser_key] = df_input[ser_key]
-            df_out[ser_key]['Mod Date'] = '2017-09-04'
+            df_out[ser_key]['Mod Date'] = date_time_str('short')
             print('Added %s to output df' % ser_key)
 
     return df_out.sort_index(axis=1)
