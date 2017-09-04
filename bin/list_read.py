@@ -59,7 +59,8 @@ def list_read(filename):
 
     # print('First record in DataFrame:')
     # print()
-    return df
+    return df.sort_index(axis=1)
+    
 
 
 # # list_read test

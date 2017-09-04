@@ -23,9 +23,8 @@ def list_add(df_current, df_input):
             df_out[ser_key] = df_input[ser_key]
             print('Added %s to output df' % ser_key)
 
-    return df_out
+    return df_out.sort_index(axis=1)
     print(df_out.keys())
-
 
 
 # list_read test
