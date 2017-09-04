@@ -48,7 +48,7 @@ def list_read(filename, start_line=2, end_line=None):
                 # Parse name for series.
                 firstn = record['First Name']
                 lastn = record['Last Name']
-                org = record['Organization']
+                org = record.get('Organization', record.get('Company', None))
 
                 if firstn and lastn:
                     name = lastn + ', ' + firstn

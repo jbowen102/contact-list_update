@@ -51,10 +51,22 @@ df2 = pd.DataFrame(dict2)
 
 # df2['Little, Mathias']['Prefix'] = 'Sir' # to overwrite data in existing field.
 # df2['Little, Mathias'][0:1] = 'Sir' # to overwrite data in existing field.
+# df2[0:1] # returns a dataframe with the first entry of all series.
 
 # df2['Little, Mathias'].keys()[-1] # to see the last index
 
+# df2.loc['Note'] = 'text here' # assigns new values to all columns at the
+# specified index.
+
+# df2.reindex(index=[]) # Allows new list of indices to be specified (reorder
+# and existing index list. Can remove indices too). Can assign new column list.
+
 # df2.index.values # returns array with all indices listed. Can use len() on.
+
+# df2.index = [] # allows a new list of indices to be specified. The data is
+# not reordered (use .reindex() for this). It just overwrites all the index
+# names in place.
+
 
 
 # http://pandas.pydata.org/pandas-docs/stable/dsintro.html#indexing-selection

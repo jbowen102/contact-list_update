@@ -29,8 +29,8 @@ def list_add(df_current, df_input):
             df_out[ser_key]['Mod Date'] = date_time_str('short')
             print('Added %s to output df' % ser_key)
 
+    # print(df_out.keys())
     return df_out.sort_index(axis=1)
-    print(df_out.keys())
 
 
 # list_read test
