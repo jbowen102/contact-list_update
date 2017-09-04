@@ -5,7 +5,7 @@ from list_sort import master_field_list
 # comment the above line out if using list_write in list_sort
 
 
-def list_write(data, fields, new_filename=None):
+def list_write(data, new_filename=None):
     """
     Takes a pandas DataFrame object, field list, and filename as input.
     New filename input is optional. Default is date and time.
@@ -28,6 +28,7 @@ def list_write(data, fields, new_filename=None):
     # print('Date and time:')
     # print(date_time_str)
 
+    fields = data.index.values
 
     # Create new file name if none passed in to function
     if not new_filename:

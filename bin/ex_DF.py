@@ -6,8 +6,8 @@ s1 = pd.Series(['', 'Justine', '', 'Henderson'],
 s2 = pd.Series(['', 'Mathias', 'W', 'Little'],
         index=['Prefix', 'First Name', 'Middle Name', 'Last Name'])
 
-dict1 = {'Brown, Joey': s1,
-	     'Fields, Molly': s2}
+dict1 = {'Henderson, Justine': s1,
+	     'Little, Mathias': s2}
 
 df1 = pd.DataFrame(dict1)
 
@@ -38,7 +38,23 @@ df2 = pd.DataFrame(dict2)
 
 
 # df2['Little, Mathias'] # returns the series associated with this label.
-# df2['Little, Mathias'].Department # Doesn't work if the index has a space.
+# df2['Little, Mathias']['Department'] # returns data in the Department field
+# df2['Little, Mathias'][0] # returns data in first field (Prefix in this case)
+
+# df2['Little, Mathias'][0] # returns data in first field (Prefix in this case)
+# as string
+# df2['Little, Mathias'][0:2] # returns slice with first two fields and indices
+# together as series.
+
+# df2['Little, Mathias']['Mod Date'] = '2017-09-04' # to add an entry into a
+# new field.
+
+# df2['Little, Mathias']['Prefix'] = 'Sir' # to overwrite data in existing field.
+# df2['Little, Mathias'][0:1] = 'Sir' # to overwrite data in existing field.
+
+# df2['Little, Mathias'].keys()[-1] # to see the last index
+
+# df2.index.values # returns array with all indices listed. Can use len() on.
 
 
 # http://pandas.pydata.org/pandas-docs/stable/dsintro.html#indexing-selection

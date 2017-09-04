@@ -22,6 +22,12 @@ def list_read(filename, start_line=2, end_line=None):
         # Get field names before entering loop (no influence from start/end
         # line specified)
         field_list = file_in.__next__()
+        # If CSV doesn't already have date-modified fields, add now.
+        if not 'Mod Date' in field_list:
+            field_list += ['Mod Date']
+            add_mod_field = True
+        else:
+            add_mod_field = False
 
         record_dict = {}
         i = 2
@@ -31,10 +37,15 @@ def list_read(filename, start_line=2, end_line=None):
             # print(row)
 
             if i >= start_line:
+
+                # Add blank entry to row if Mod Date field didn't already exist.
+                if add_mod_field:
+                    row += ['']
                 record = pd.Series(row, index=field_list)
                 # print('Record %s:' % i)
                 # print(record)
 
+                # Parse name for series.
                 firstn = record['First Name']
                 lastn = record['Last Name']
                 org = record['Organization']
