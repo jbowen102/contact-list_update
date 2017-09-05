@@ -33,20 +33,19 @@ def date_time_str(form):
         raise ValueError("Input either 'short' or 'long'")
 
 
-def list_write(data, new_filename=None):
+def list_write(data, desc=''):
     """
-    Takes a pandas DataFrame object, field list, and filename as input.
-    New filename input is optional. Default is date and time.
+    Takes a pandas DataFrame object and file description as input.
+    Description is optional. Default is date and time.
     Writes new file. Returns nothing.
     If there is a file with the same name in the output_data directory,
     it will be overwritten!
     """
 
     fields = data.index.values
-
-    # Create new file name if none passed in to function
-    if not new_filename:
-        new_filename = './output_data/' + date_time_str('long') + '.csv'
+    if desc:
+        desc = '_' + desc
+    new_filename = './output_data/' + date_time_str('long') + desc + '.csv'
 
     # If data is only one row, modify the iterable so it writes correctly.
     if isinstance(data[0:1], str):

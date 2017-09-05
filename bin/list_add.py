@@ -27,7 +27,7 @@ def list_add(df_current, df_input):
 
             df_out[ser_key] = df_input[ser_key]
             df_out[ser_key]['Mod Date'] = date_time_str('short')
-            print('Added %s to output df' % ser_key)
+            print('Added %s to output DF' % ser_key)
 
     # print(df_out.keys())
     return df_out.sort_index(axis=1)
@@ -37,12 +37,17 @@ def list_add(df_current, df_input):
 from list_read import list_read
 from list_write import list_write
 from list_sort import master_field_list
-filename1 = './master/Sample_iPhone_Export_2.csv'
+# filename1 = './master/Sample_iPhone_Export_2.csv'
+# filename1 = './master/MyContacts-2017-08-10-210940-230_shortened.csv'
+filename1 = './master/2017-07-12_TSV_Contacts.csv'
+
 df_current = list_read(filename1)
-filename2 = './input_data/Sample_iPhone_Export_3.csv'
+# filename2 = './input_data/Sample_iPhone_Export_3.csv'
+# filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
+filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
+
 df_input = list_read(filename2)
 df_out = list_add(df_current, df_input)
 
-# input('>>')
 # fields = master_field_list(filename1)
-list_write(df_out, new_filename=None)
+list_write(df_out, desc='TSV_test_1')

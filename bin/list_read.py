@@ -26,6 +26,7 @@ def list_read(filename, start_line=2, end_line=None):
         if not 'Mod Date' in field_list:
             field_list += ['Mod Date']
             add_mod_field = True
+            # print('Added Mod Date field. Number of indices:', len(field_list))
         else:
             add_mod_field = False
 
@@ -41,6 +42,7 @@ def list_read(filename, start_line=2, end_line=None):
                 # Add blank entry to row if Mod Date field didn't already exist.
                 if add_mod_field:
                     row += ['']
+                print('Row %d in CSV. Length: %d' % (i, len(row)))
                 record = pd.Series(row, index=field_list)
                 # print('Record %s:' % i)
                 # print(record)
