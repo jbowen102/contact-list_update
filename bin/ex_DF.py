@@ -62,7 +62,12 @@ df2 = pd.DataFrame(dict2)
 # Returns a dataframe with the first entry of all series.
 
 # df2['Little, Mathias'].keys()[-1]
-# Ro see the last index
+# To see the last index
+
+# s3.values returns np array with all values in that series (similar to .keys())
+
+# df2.index.values
+# Returns array with all indices listed. Can use len() on.
 
 # df2.loc['Note'] = 'text here'
 # Assigns new values to all columns at the specified index.
@@ -71,14 +76,9 @@ df2 = pd.DataFrame(dict2)
 # Allows new list of indices to be specified (reorder an existing index list.
 # Can remove indices too). Can assign new column list.
 
-# df2.index.values
-# Returns array with all indices listed. Can use len() on.
-
 # df2.index = []
 # Allows a new list of indices to be specified. The data is not reordered (use
 # .reindex() for this). It just overwrites all the index names in place.
-
-
 
 # http://pandas.pydata.org/pandas-docs/stable/dsintro.html#indexing-selection
 

@@ -16,7 +16,7 @@ def list_read(filename, start_line=2, end_line=None):
     Name only, or Organization name.
     """
 
-    if not end_line >= start_line:
+    if end_line and not end_line >= start_line:
         raise ValueError('End value must be greater than or equal to '
                 'start value')
 
@@ -39,14 +39,18 @@ def list_read(filename, start_line=2, end_line=None):
         i = 2
 
         for row in file_in:
-            # print('Row %s:' % i)
+            # print('Row %d of length %d:' % (i, len(row)))
             # print(row)
 
             if i >= start_line:
 
-                # Add blank entry to row if Mod Date field didn't already exist.
-                if add_mod_field:
-                    row += ['']
+                # Pad end of row with blank entries if field_list longer
+                # (Outlook exports this way). Also adds blank entry for
+                # Mod Date field, if it didn't already exist.
+                len_diff = len(field_list) - len(row)
+                if len_diff > 0:
+                    row += [''] * len_diff
+
                 # print('Row %d in CSV. Length: %d' % (i, len(row)))
                 record = pd.Series(row, index=field_list)
                 # print('Record %s:' % i)
@@ -57,7 +61,7 @@ def list_read(filename, start_line=2, end_line=None):
                 lastn = record.get('Last Name', None).lower()
                 org = record.get('Organization',
                       record.get('Company', None)).lower()
-                
+
                 if firstn and lastn:
                     name = lastn + ', ' + firstn
                 elif firstn:
@@ -65,7 +69,7 @@ def list_read(filename, start_line=2, end_line=None):
                 elif org:
                     name = org
                 else:
-                    raise ValueError('No first, last, or organization name for'
+                    raise ValueError('No first, last, or organization name for '
                                         'record %i' % i)
 
                 record_dict.update({name: record})
@@ -80,6 +84,7 @@ def list_read(filename, start_line=2, end_line=None):
     return df.sort_index(axis=1)
 
 
-# # # list_read test
+# # list_read test
 # filename = './input_data/Sample_iPhone_Export.csv'
-# list_read(filename)
+# filename1 = './master/2017-07-12_TSV_Contacts.csv'
+# list_read(filename1)
