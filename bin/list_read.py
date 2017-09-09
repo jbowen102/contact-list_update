@@ -3,7 +3,7 @@ import pandas as pd
 
 def list_read(filename, start_line=2, end_line=None):
     """
-    Function to read in CSV data from a contact list.
+    Function to read in CSV data from a contact list and store in a DataFrame.
     Inputs:
         filename: a string containing the file path and name
         start_line: the first numbered line of the CSV that should be included
@@ -15,13 +15,18 @@ def list_read(filename, start_line=2, end_line=None):
     The key for each Series in the DataFrame is the First+Last Name, First
     Name only, or Organization name.
     """
+
+    if not end_line >= start_line:
+        raise ValueError('End value must be greater than or equal to '
+                'start value')
+
     with open(filename, 'r') as csvfile:
         print('Reading input data from CSV...')
         file_in = csv.reader(csvfile)
 
-        # Get field names before entering loop (no influence from start/end
-        # line specified)
+        # Get field names before entering loop
         field_list = file_in.__next__()
+
         # If CSV doesn't already have date-modified fields, add now.
         if not 'Mod Date' in field_list:
             field_list += ['Mod Date']
@@ -42,16 +47,17 @@ def list_read(filename, start_line=2, end_line=None):
                 # Add blank entry to row if Mod Date field didn't already exist.
                 if add_mod_field:
                     row += ['']
-                print('Row %d in CSV. Length: %d' % (i, len(row)))
+                # print('Row %d in CSV. Length: %d' % (i, len(row)))
                 record = pd.Series(row, index=field_list)
                 # print('Record %s:' % i)
                 # print(record)
 
                 # Parse name for series.
-                firstn = record['First Name']
-                lastn = record['Last Name']
-                org = record.get('Organization', record.get('Company', None))
-
+                firstn = record.get('First Name', None).lower()
+                lastn = record.get('Last Name', None).lower()
+                org = record.get('Organization',
+                      record.get('Company', None)).lower()
+                
                 if firstn and lastn:
                     name = lastn + ', ' + firstn
                 elif firstn:
@@ -68,14 +74,10 @@ def list_read(filename, start_line=2, end_line=None):
             if end_line and i > end_line:
                 break
 
-    # df = pd.DataFrame.from_dict(record_dict, orient='index')
     df = pd.DataFrame(record_dict)
     # print('Input CSV data as DataFrame:\n', df)
 
-    # print('First record in DataFrame:')
-    # print()
     return df.sort_index(axis=1)
-
 
 
 # # # list_read test

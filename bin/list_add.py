@@ -11,25 +11,20 @@ def list_add(df_current, df_input):
     Name only, or Organization name.
     """
 
-    # print(df_current.keys())
-
-    # Create copy of master dataframe and add
+    # Create copy of current dataframe
     df_out = df_current.copy()
 
     for ser_key in df_input.keys():
 
-        # ser_key = df_input.keys()[s]
-        # print(ser_key)
-
         # If any series key is not already in df_current, add it now.
-        # Known issue: Editing a name will cause a duplicate to be added.
+        # Known issue: Editing a name will cause the new one to be added in
+        # addition to old one, not replacing.
         if not ser_key in df_current.keys():
 
             df_out[ser_key] = df_input[ser_key]
             df_out[ser_key]['Mod Date'] = date_time_str('short')
             print('Added %s to output DF' % ser_key)
 
-    # print(df_out.keys())
     return df_out.sort_index(axis=1)
 
 

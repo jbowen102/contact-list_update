@@ -18,8 +18,6 @@ def master_field_list(filename='./current_master/TB_default_fields.csv'):
 
         i = 0
         for row in file_in:
-            # print('Fields:')
-            # print(row)
 
             # Make sure not to read data from any rows except first.
             if i >= 1:
@@ -41,6 +39,5 @@ def master_field_list(filename='./current_master/TB_default_fields.csv'):
 
 def list_sort(ordered_fields, input_filename):
     field_order = master_field_list()
-
 
     pass

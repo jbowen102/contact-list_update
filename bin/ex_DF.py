@@ -11,7 +11,7 @@ dict1 = {'Henderson, Justine': s1,
 
 df1 = pd.DataFrame(dict1)
 
-# Full-length series (iPhone export)
+# Full-length series (iPhone export format)
 s3 = pd.Series(['', 'Justine', '', 'Henderson', '', 'The Sandwich Shop',
         '', '', '', '', '', '(949) 569-4371', '', '', '', '', '', '', '', '',
         '', '', '', '', '', '', '', 'cargocollective.com', '',
@@ -37,54 +37,61 @@ dict2 = {'Henderson, Justine': s3,
 df2 = pd.DataFrame(dict2)
 
 
-# df2['Little, Mathias'] # returns the series associated with this label.
-# df2['Little, Mathias']['Department'] # returns data in the Department field
-# df2['Little, Mathias'][0] # returns data in first field (Prefix in this case)
+# df2['Little, Mathias']
+# Returns the series associated with this label.
 
-# df2['Little, Mathias'][0] # returns data in first field (Prefix in this case)
-# as string
-# df2['Little, Mathias'][0:2] # returns slice with first two fields and indices
-# together as series.
+# df2['Little, Mathias']['Department']
+# Returns data in the Department field
 
-# df2['Little, Mathias']['Mod Date'] = '2017-09-04' # to add an entry into a
-# new field.
+# df2['Little, Mathias'][0]
+# Returns data in first field (Prefix in this case) as string
 
-# df2['Little, Mathias']['Prefix'] = 'Sir' # to overwrite data in existing field.
-# df2['Little, Mathias'][0:1] = 'Sir' # to overwrite data in existing field.
-# df2[0:1] # returns a dataframe with the first entry of all series.
+# df2['Little, Mathias'][0:2]
+# Returns slice with first two fields and indices together as series.
 
-# df2['Little, Mathias'].keys()[-1] # to see the last index
+# df2['Little, Mathias']['Mod Date'] = '2017-09-04'
+# To assign a new value to an existing field or assign a value in a new field.
 
-# df2.loc['Note'] = 'text here' # assigns new values to all columns at the
-# specified index.
+# df2['Little, Mathias']['Prefix'] = 'Sir'
+# To overwrite data in existing field.
 
-# df2.reindex(index=[]) # Allows new list of indices to be specified (reorder
-# and existing index list. Can remove indices too). Can assign new column list.
+# df2['Little, Mathias'][0:1] = 'Sir'
+# To overwrite data in existing field.
 
-# df2.index.values # returns array with all indices listed. Can use len() on.
+# df2[0:1]
+# Returns a dataframe with the first entry of all series.
 
-# df2.index = [] # allows a new list of indices to be specified. The data is
-# not reordered (use .reindex() for this). It just overwrites all the index
-# names in place.
+# df2['Little, Mathias'].keys()[-1]
+# Ro see the last index
+
+# df2.loc['Note'] = 'text here'
+# Assigns new values to all columns at the specified index.
+
+# df2.reindex(index=[])
+# Allows new list of indices to be specified (reorder an existing index list.
+# Can remove indices too). Can assign new column list.
+
+# df2.index.values
+# Returns array with all indices listed. Can use len() on.
+
+# df2.index = []
+# Allows a new list of indices to be specified. The data is not reordered (use
+# .reindex() for this). It just overwrites all the index names in place.
 
 
 
 # http://pandas.pydata.org/pandas-docs/stable/dsintro.html#indexing-selection
 
-# df = pd.DataFrame.from_dict(dict1, orient='index')
-
 # Series label needs to be a valid Python name to be used for selection as attribute.
 # http://pandas.pydata.org/pandas-docs/stable/dsintro.html#dataframe-column-attribute-access-and-ipython-completion
 
 
-# obs
-# Select record/series corresponding to label 'Brown, Joey'
 # df.loc['Brown, Joey']
 # df.loc[['Brown, Joey', 'Fields, Molly']]
-# df.loc['Brown, Joey':'Fields, Molly'] # both start and stop indices returned
+# Select record/series corresponding to labels.
 
-# Select record/series corresponding to integer 1
 # df.iloc[1]
+# Select record/series corresponding to integer 1
 
-# Slice records/series
 # df[1:3]
+# Slice records/series

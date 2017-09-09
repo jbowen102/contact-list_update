@@ -23,8 +23,6 @@ def date_time_str(form):
     date_time_str = ('%.4i-%.2i-%.2i' % (yr, mon, day) + '_' +
                      '%.2i%.2i%.2i' % (hr, minute, sec))
 
-    # print('Date and time:')
-    # print(date_time_str)
     if form == 'short':
         return date_str
     if form == 'long':
@@ -62,8 +60,6 @@ def list_write(data, desc=''):
 
         for ser_key in data.keys():
 
-            # type(data[ser_key])
-            # print(data[ser_key])
             new_file_csv.writerow(data[ser_key])
 
 
