@@ -15,6 +15,9 @@ def list_add(df_current, df_input):
     # Create copy of current dataframe
     df_out = df_current.copy()
 
+    new_rec = []
+    mod_rec = []
+
     for ser_key in df_input.keys():
 
         # If any series key is not already in df_current, add it now.
@@ -23,7 +26,8 @@ def list_add(df_current, df_input):
         if not ser_key in df_current.keys():
             df_out[ser_key] = df_input[ser_key]
             df_out[ser_key]['Mod Date'] = date_time_str('short')
-            print('Added %s to output DF' % ser_key)
+            new_rec += [ser_key]
+            print('+ Added %s' % ser_key)
             continue
 
         # Compare md5 hash of new and current records
@@ -38,8 +42,14 @@ def list_add(df_current, df_input):
         if not input_str_hash == curr_str_hash:
             df_out[ser_key] = df_input[ser_key]
             df_out[ser_key]['Mod Date'] = date_time_str('short')
-            print('\tModified %s' % ser_key)
+            mod_rec += [ser_key]
+            print('^ Modified %s' % ser_key)
+            # print('\tCurrent: %s' % curr_str_rec)
+            # print('\t    New: %s' % input_str_rec)
 
+    print('\n' + '#' * 10 + 'Update finished' + '#' * 10)
+    print('\tEntries added (%d)' % len(new_rec))
+    print('\tEntries modified (%d)' % len(mod_rec))
     return df_out.sort_index(axis=1)
 
 
@@ -48,7 +58,7 @@ from list_read import list_read
 from list_write import list_write
 from list_sort import master_field_list
 # filename1 = './master/Sample_iPhone_Export_2.csv'
-filename1 = './master/MyContacts-2017-08-10-210940-230_shortened.csv'
+filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
 # filename1 = './master/2017-07-12_TSV_Contacts.csv'
 df_current = list_read(filename1)
 
@@ -58,4 +68,4 @@ filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
 df_input = list_read(filename2)
 
 df_out = list_add(df_current, df_input)
-list_write(df_out, desc='iPhone_test_4')
+list_write(df_out, desc='iPhone_test_8')
