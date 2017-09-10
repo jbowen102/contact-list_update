@@ -2,6 +2,48 @@ from hashlib import md5 # delete later
 import csv
 import pandas as pd
 
+
+def field_list_mod(raw_field_list):
+    """
+    Function to modify the standard iPhone export field list to fix non-unique
+    headings. Takes in list with standard entries.
+    Returns list with unique entries.
+    """
+
+    mod_field_list = raw_field_list[:]
+
+    mod_field_list += ['Mod Date']
+
+    # Check that number of non-unique fields hasn't changed.
+    assert mod_field_list.count('Home') == 4
+    assert mod_field_list.count('Work') == 4
+    assert mod_field_list.count('Email') == 4
+
+    # Add descriptors to Work and Home Phone
+    mod_field_list[mod_field_list.index('Work')] = 'Work [Phone]'
+    mod_field_list[mod_field_list.index('Home')] = 'Home [Phone]'
+
+    # Add descriptors to Home and Work Email
+    mod_field_list[mod_field_list.index('Home')] = 'Home [Email]'
+    mod_field_list[mod_field_list.index('Work')] = 'Work [Email]'
+
+    # Add descriptors to Emails 1, 2, 3, 4
+    mod_field_list[mod_field_list.index('Email')] = 'Email [1]'
+    mod_field_list[mod_field_list.index('Email')] = 'Email [2]'
+    mod_field_list[mod_field_list.index('Email')] = 'Email [3]'
+    mod_field_list[mod_field_list.index('Email')] = 'Email [4]'
+
+    # Add descriptors to Home and Work URLs
+    mod_field_list[mod_field_list.index('Home')] = 'Home [URL]'
+    mod_field_list[mod_field_list.index('Work')] = 'Work [URL]'
+
+    # Add descriptors to Home and Work Addresses
+    mod_field_list[mod_field_list.index('Home')] = 'Home [Address]'
+    mod_field_list[mod_field_list.index('Work')] = 'Work [Address]'
+
+    return mod_field_list
+
+
 def list_read(filename, start_line=2, end_line=None):
     """
     Function to read in CSV data from a contact list and store in a DataFrame.
@@ -26,15 +68,14 @@ def list_read(filename, start_line=2, end_line=None):
         file_in = csv.reader(csvfile)
 
         # Get field names before entering loop
+        # field_list = file_in.__next__()
         field_list = file_in.__next__()
 
-        # If CSV doesn't already have date-modified fields, add now.
+        # If CSV doesn't already have date-modified column, assume it is also
+        # has non-unique, unmodified columns. Make columns unique and add
+        # Mod Date column.
         if not 'Mod Date' in field_list:
-            field_list += ['Mod Date']
-            add_mod_field = True
-            # print('Added Mod Date field. Number of indices:', len(field_list))
-        else:
-            add_mod_field = False
+            field_list = field_list_mod(field_list)
 
         record_dict = {}
         i = 2
@@ -47,7 +88,7 @@ def list_read(filename, start_line=2, end_line=None):
 
                 # Pad end of row with blank entries if field_list longer
                 # (Outlook exports this way). Also adds blank entry for
-                # Mod Date field, if it didn't already exist.
+                # Mod Date column, if it didn't already exist.
                 len_diff = len(field_list) - len(row)
                 if len_diff > 0:
                     row += [''] * len_diff
@@ -72,11 +113,6 @@ def list_read(filename, start_line=2, end_line=None):
                 else:
                     raise ValueError('No first, last, or organization name for '
                                         'record %i' % i)
-
-                # rec_str = '|'.join(record.values)
-                # rec_str_enc = rec_str.encode('utf-8')
-                # rec_hash = md5(rec_str_enc).hexdigest()
-                # print('md5 hash of series %d: %s' % (i, rec_hash))
 
                 record_dict.update({name: record})
 
