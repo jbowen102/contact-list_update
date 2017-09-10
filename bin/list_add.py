@@ -24,13 +24,21 @@ def list_add(df_current, df_input):
             df_out[ser_key] = df_input[ser_key]
             df_out[ser_key]['Mod Date'] = date_time_str('short')
             print('Added %s to output DF' % ser_key)
+            continue
+
+        # Compare md5 hash of new and current records
+        input_str = '|'.join(df_input[ser_key].values)
+        curr_str = '|'.join(df_current[ser_key].values)
+        input_str_rec = input_str.encode('utf-8')
+        curr_str_rec = curr_str.encode('utf-8')
+        input_str_hash = md5(input_str_rec).hexdigest()
+        curr_str_hash = md5(curr_str_rec).hexdigest()
 
         # If the two series are not exactly the same, use the new one.
-        elif not (md5(df_input[ser_key].values).hexdigest() ==
-                    md5(df_current[ser_key].values).hexdigest()):
+        if not input_str_hash == curr_str_hash:
             df_out[ser_key] = df_input[ser_key]
             df_out[ser_key]['Mod Date'] = date_time_str('short')
-            print('Modified %s' % ser_key)
+            print('\tModified %s' % ser_key)
 
     return df_out.sort_index(axis=1)
 
@@ -50,4 +58,4 @@ filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
 df_input = list_read(filename2)
 
 df_out = list_add(df_current, df_input)
-list_write(df_out, desc='iPhone_test_3')
+list_write(df_out, desc='iPhone_test_4')

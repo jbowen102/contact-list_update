@@ -1,3 +1,4 @@
+from hashlib import md5 # delete later
 import csv
 import pandas as pd
 
@@ -54,7 +55,7 @@ def list_read(filename, start_line=2, end_line=None):
                 # print('Row %d in CSV. Length: %d' % (i, len(row)))
                 record = pd.Series(row, index=field_list)
                 # print('Record %s:' % i)
-                # print(record)
+                # print(record.values)
 
                 # Parse name for series.
                 firstn = record.get('First Name', None).lower()
@@ -72,6 +73,11 @@ def list_read(filename, start_line=2, end_line=None):
                     raise ValueError('No first, last, or organization name for '
                                         'record %i' % i)
 
+                # rec_str = '|'.join(record.values)
+                # rec_str_enc = rec_str.encode('utf-8')
+                # rec_hash = md5(rec_str_enc).hexdigest()
+                # print('md5 hash of series %d: %s' % (i, rec_hash))
+
                 record_dict.update({name: record})
 
             i += 1
@@ -85,6 +91,10 @@ def list_read(filename, start_line=2, end_line=None):
 
 
 # # list_read test
-# filename = './input_data/Sample_iPhone_Export.csv'
-# filename1 = './master/2017-07-12_TSV_Contacts.csv'
-# list_read(filename1)
+# # filename = './input_data/Sample_iPhone_Export.csv'
+# # filename1 = './master/2017-07-12_TSV_Contacts.csv'
+# filename1 = './master/MyContacts-2017-08-10-210940-230_shortened.csv'
+# list_read(filename1, end_line=7)
+# print('\n' + '-'*80 + '\n')
+# filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
+# list_read(filename2, end_line=7)
