@@ -3,6 +3,25 @@ import pandas as pd
 from list_write import date_time_str
 
 
+def series_compare(input_ser, current_ser):
+    """
+    Function that takes in two pandas Series objects with contact info and
+    compares them by taking the md5 hash of the concatenation of all entries.
+    Returns Boolean True if Series are different and False if equivalent.
+    """
+
+    input_str = '|'.join(input_ser.values)
+    curr_str = '|'.join(current_ser.values)
+    input_str_rec = input_str.encode('utf-8')
+    curr_str_rec = curr_str.encode('utf-8')
+    input_str_hash = md5(input_str_rec).hexdigest()
+    curr_str_hash = md5(curr_str_rec).hexdigest()
+    # print('\tCurrent: %s' % curr_str_rec)
+    # print('\t    New: %s' % input_str_rec)
+
+    return (not input_str_hash == curr_str_hash)
+
+
 def list_add(df_current, df_input):
     """
     Function that takes in a pandas DataFrame of contacts and adds any new
@@ -30,22 +49,15 @@ def list_add(df_current, df_input):
             print('+ Added %s' % ser_key)
             continue
 
-        # Compare md5 hash of new and current records
-        input_str = '|'.join(df_input[ser_key].values)
-        curr_str = '|'.join(df_current[ser_key].values)
-        input_str_rec = input_str.encode('utf-8')
-        curr_str_rec = curr_str.encode('utf-8')
-        input_str_hash = md5(input_str_rec).hexdigest()
-        curr_str_hash = md5(curr_str_rec).hexdigest()
+        # Compare new and current records
+        str_mod = series_compare(df_input[ser_key], df_out[ser_key])
 
         # If the two series are not exactly the same, use the new one.
-        if not input_str_hash == curr_str_hash:
+        if str_mod:
             df_out[ser_key] = df_input[ser_key]
             df_out[ser_key]['Mod Date'] = date_time_str('short')
             mod_rec += [ser_key]
             print('^ Modified %s' % ser_key)
-            # print('\tCurrent: %s' % curr_str_rec)
-            # print('\t    New: %s' % input_str_rec)
 
     print('\n' + '#' * 10 + 'Update finished' + '#' * 10)
     print('\tEntries added (%d)' % len(new_rec))
@@ -68,4 +80,4 @@ filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
 df_input = list_read(filename2)
 
 df_out = list_add(df_current, df_input)
-list_write(df_out, desc='iPhone_test_8')
+list_write(df_out, desc='iPhone_test_9')
