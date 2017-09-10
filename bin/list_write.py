@@ -62,6 +62,8 @@ def list_write(data, desc=''):
 
             new_file_csv.writerow(data[ser_key])
 
+        return new_filename
+
 
 # # list_write test
 # # Reads in the unsorted fields
@@ -71,4 +73,4 @@ def list_write(data, desc=''):
 # from list_read import list_read
 # filename = './input_data/Sample_iPhone_Export.csv'
 # data = list_read(filename, start_line=3, end_line=10)
-# list_write(data, fields)
+# new_file = list_write(data, fields)
