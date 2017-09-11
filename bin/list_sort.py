@@ -4,44 +4,118 @@ from list_read import list_read
 # from list_write import list_write # circular reference
 
 
-def master_field_list(filename='./current_master/TB_default_fields.csv'):
+def master_field_dict(master_file='./current_master/TB_default_fields.csv'
+                            map_type):
     """
-    Function to read in field order from a master list.
+    Function to read in field order from a master list and 'iPhone' or 'Outlook'
+    as type of mapping to create.
     Fields should be ordered according to Thunderbird default import order.
     Reads in the first row as the field names.
     Data in any row but the first will be ignored.
-    Returns list object with field names as strings.
+    Returns a dict with mapping of Thunderbird heading names to Outlook or
+    iPhone-export contact-list heading names.
+    to .
     """
+
     with open(filename, 'r') as csvfile:
         print('Reading master field order from CSV...')
         file_in = csv.reader(csvfile)
 
-        i = 0
-        for row in file_in:
+        field_list = file_in.__next__()
 
-            # Make sure not to read data from any rows except first.
-            if i >= 1:
-                break
-            i += 1
+        if map_type == 'iPhone':
+            map_dict = {'First Name': 'First Name',
+                        'Last Name': 'Last Name',
+                        'Display Name': '',
+                        'Nickname': 'Nickname',
+                        'Organization': 'Organization',
+                        'Department': 'Department',
+                        'Job Title': 'Title',
+                        'Primary Email': 'Home [Email]',
+                        'Secondary Email': 'Work [Email]',
+                    	'Mobile Number': 'Mobile',
+                    	'Home Phone': 'Home [Phone]',
+                    	'Work Phone': 'Work [Phone]',
+                    	'Fax Number': 'Work Fax',
+                    	'Web Page 1': 'Home Page',
+                    	'Home Address': 'Home [Address]',
+                    	'Work Address': 'Work [Address]',
+                    	'Notes': 'Note',
+                    	'Pager Number': 'Pager',
+                    	'Home Address 2': '',
+                    	'Home City': '',
+                    	'Home State': '',
+                    	'Home ZipCode': '',
+                    	'Screen Name': '',
+                    	'Home Country': '',
+                    	'Work Address 2': '',
+                    	'Work City': '',
+                    	'Work State': '',
+                    	'Work ZipCode': '',
+                    	'Work Country': '',
+                    	'Web Page 2': '',
+                    	'Birth Year': '',
+                    	'Birth Month': '',
+                    	'Birth Day': ''}
 
-            field_list = row
+        if map_type == 'Outlook':
+            # map_dict = {'First Name': 'First Name',
+            #             'Last Name': 'Last Name',
+            #             'Display Name': '',
+            #             'Nickname': 'Nickname',
+            #             'Organization': 'Organization',
+            #             'Department': 'Department',
+            #             'Job Title': 'Title',
+            #             'Primary Email': 'Home [Email]',
+            #             'Secondary Email': 'Work [Email]',
+            #         	'Mobile Number': 'Mobile',
+            #         	'Home Phone': 'Home [Phone]',
+            #         	'Work Phone': 'Work [Phone]',
+            #         	'Fax Number': 'Work Fax',
+            #         	'Web Page 1': 'Home Page',
+            #         	'Home Address': 'Home [Address]',
+            #         	'Work Address': 'Work [Address]',
+            #         	'Notes': 'Note',
+            #         	'Pager Number': 'Pager',
+            #         	'Home Address 2': '',
+            #         	'Home City': '',
+            #         	'Home State': '',
+            #         	'Home ZipCode': '',
+            #         	'Screen Name': '',
+            #         	'Home Country': '',
+            #         	'Work Address 2': '',
+            #         	'Work City': '',
+            #         	'Work State': '',
+            #         	'Work ZipCode': '',
+            #         	'Work Country': '',
+            #         	'Web Page 2': '',
+            #         	'Birth Year': '',
+            #         	'Birth Month': '',
+            #         	'Birth Day': ''}
 
-        return field_list
 
 
-# # master_field_list test
-# # field_list = master_field_list()
+    elif map_type == 'iPhone':
+
+    else:
+        raise ValueError("map_type must be either 'iPhone' or 'Outlook'")
+
+
+    # Ensure Thunderbird headings match hard-coded dict keys
+    assert set(field_list) == set(map_dict.keys())
+
+
+
+    for i in field_list:
+
+
+
+# # master_field_dict test
+# # field_list = master_field_dict()
 # # print(field_list)
-# field_list = master_field_list()
+# field_list = master_field_dict()
 # print(field_list)
 # new_file = list_write(field_list)
-
-
-def iPhone_field_map():
-    """
-    Function that returns a dict with mapping of iPhone-export contact-list
-    heading names to Thunderbird heading names.
-    """
 
 
 def list_sort(DF_to_sort, ordered_fields):
