@@ -18,18 +18,22 @@ s3 = pd.Series(['', 'Justine', '', 'Henderson', '', 'The Sandwich Shop',
         '70 Bowman St. South Windsor, CT 06074', '', ''],
         index=['Prefix', 'First Name', 'Middle Name', 'Last Name', 'Suffix',
         'Organization', 'Department', 'Title', 'Nickname', 'Birthday',
-        'Anniversary', 'Mobile', 'iPhone', 'Work', 'Home', 'Main', 'Home Fax',
-        'Work Fax', 'Pager', 'Other', 'Home', 'Work', 'Email', 'Email', 'Email',
-        'Email', 'Home Page', 'Home', 'Work', 'Home', 'Work', 'Note'])
+        'Anniversary', 'Mobile', 'iPhone', 'Work [Phone]', 'Home [Phone]',
+        'Main', 'Home Fax', 'Work Fax', 'Pager', 'Other', 'Home [Email]',
+        'Work [Email]', 'Email [1]', 'Email [2]', 'Email [3]', 'Email [4]',
+        'Home Page', 'Home [URL]', 'Work [URL]', 'Home [Address]',
+        'Work [Address]', 'Note'])
 s4 = pd.Series(['', 'Mathias', 'W', 'Little', 'Jr.', '', '', '', '',
         '1955-01-09', '', '(293) 799-2919', '', '', '', '', '', '', '', '',
         'euice@outlook.com', '', '', '', '', '', '', '', '',
         '17 Wilson Rd. Medford, MA 02155', '', ''],
         index=['Prefix', 'First Name', 'Middle Name', 'Last Name', 'Suffix',
         'Organization', 'Department', 'Title', 'Nickname', 'Birthday',
-        'Anniversary', 'Mobile', 'iPhone', 'Work', 'Home', 'Main', 'Home Fax',
-        'Work Fax', 'Pager', 'Other', 'Home', 'Work', 'Email', 'Email', 'Email',
-        'Email', 'Home Page', 'Home', 'Work', 'Home', 'Work', 'Note'])
+        'Anniversary', 'Mobile', 'iPhone', 'Work [Phone]', 'Home [Phone]',
+        'Main', 'Home Fax', 'Work Fax', 'Pager', 'Other', 'Home [Email]',
+        'Work [Email]', 'Email [1]', 'Email [2]', 'Email [3]', 'Email [4]',
+        'Home Page', 'Home [URL]', 'Work [URL]', 'Home [Address]',
+        'Work [Address]', 'Note'])
 
 dict2 = {'Henderson, Justine': s3,
 	     'Little, Mathias': s4}

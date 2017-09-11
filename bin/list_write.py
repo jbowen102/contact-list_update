@@ -1,8 +1,6 @@
 import time
 import csv
 import pandas as pd
-from list_sort import master_field_list
-# comment the above line out if using list_write in list_sort
 
 def date_time_str(form):
     """
@@ -66,6 +64,8 @@ def list_write(data, desc=''):
 
 
 # # list_write test
+# from list_sort import master_field_list
+# comment the above line out if using list_write in list_sort
 # # Reads in the unsorted fields
 # fields = master_field_list('./input_data/Sample_iPhone_Export.csv')
 # # fields = master_field_list() # gets correct master list
