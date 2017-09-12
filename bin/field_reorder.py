@@ -1,3 +1,4 @@
+import csv
 import pandas as pd
 
 
@@ -127,6 +128,7 @@ def field_reorder(df_to_sort, master_file='./master/TB_default_fields.csv'):
     assert set(field_list) == set(map_dict.keys())
 
     # Create new list and populate with ordered df field names.
+    print('Reordering fields...')
     sorted_index = []
     for TB_field in field_list:
         sorted_index += [map_dict[TB_field]]
@@ -137,16 +139,15 @@ def field_reorder(df_to_sort, master_file='./master/TB_default_fields.csv'):
     return df_sorted
 
 
-# field_reorder test
-import csv
-from list_read import list_read
-from list_combine import list_combine
-from list_write import list_write
-filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
-# filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
-filename3 = './input_data/MyContacts-2017-08-10-210940-230.csv'
-df_current = list_read(filename1)
-df_in = list_read(filename3)
-df_comb = list_combine(df_current, df_in)
-df_sorted = field_reorder(df_comb)
-new_file = list_write(df_sorted, desc='iPhone_comb+sort_03')
+# # field_reorder test
+# from list_read import list_read
+# from list_combine import list_combine
+# from list_write import list_write
+# filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
+# # filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
+# filename3 = './input_data/MyContacts-2017-08-10-210940-230.csv'
+# df_current = list_read(filename1)
+# df_in = list_read(filename3)
+# df_comb = list_combine(df_current, df_in)
+# df_sorted = field_reorder(df_comb)
+# new_file = list_write(df_sorted, desc='iPhone_comb+sort_03')

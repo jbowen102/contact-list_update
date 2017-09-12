@@ -1,49 +1,9 @@
-from hashlib import md5 # delete later
 import csv
 import pandas as pd
 
 
-def field_list_mod(raw_field_list):
-    """
-    Function to modify the standard iPhone export field list to fix non-unique
-    headings. Takes in list with standard entries.
-    Returns list with unique entries.
-    """
-
-    mod_field_list = raw_field_list[:]
-
-    # Check that number of non-unique fields hasn't changed.
-    assert mod_field_list.count('Home') == 4
-    assert mod_field_list.count('Work') == 4
-    assert mod_field_list.count('Email') == 4
-
-    # Add descriptors to Work and Home Phone
-    mod_field_list[mod_field_list.index('Work')] = 'Work [Phone]'
-    mod_field_list[mod_field_list.index('Home')] = 'Home [Phone]'
-
-    # Add descriptors to Home and Work Email
-    mod_field_list[mod_field_list.index('Home')] = 'Home [Email]'
-    mod_field_list[mod_field_list.index('Work')] = 'Work [Email]'
-
-    # Add descriptors to Emails 1, 2, 3, 4
-    mod_field_list[mod_field_list.index('Email')] = 'Email [1]'
-    mod_field_list[mod_field_list.index('Email')] = 'Email [2]'
-    mod_field_list[mod_field_list.index('Email')] = 'Email [3]'
-    mod_field_list[mod_field_list.index('Email')] = 'Email [4]'
-
-    # Add descriptors to Home and Work URLs
-    mod_field_list[mod_field_list.index('Home')] = 'Home [URL]'
-    mod_field_list[mod_field_list.index('Work')] = 'Work [URL]'
-
-    # Add descriptors to Home and Work Addresses
-    mod_field_list[mod_field_list.index('Home')] = 'Home [Address]'
-    mod_field_list[mod_field_list.index('Work')] = 'Work [Address]'
-
-    return mod_field_list
-
 
 class RecordSeries(object):
-
     def __init__(self, record_row, field_list):
         self.record_row = record_row
         self.field_list = field_list
@@ -63,6 +23,7 @@ class RecordSeries(object):
         return self.record_series
 
     def name_map(self):
+        "Returns a dict with series name as key and series as value"
         # Parse name for series.
         self.firstn = self.record_series.get('First Name', None).lower()
         self.lastn = self.record_series.get('Last Name', None).lower()
@@ -82,44 +43,63 @@ class RecordSeries(object):
         return {self.name: self.record_series}
 
 
-#
-# def create_series(record_row, field_list):
-#     """
-#     Function that takes a contact-list record and field list as inputs
-#     and creates a pandas Series with the list's column headings as the index.
-#     Also parses the record's name
-#     Returns 1-dict with the record name as key and record series as value.
-#     """
-#
-#     # Pad end of row with blank entries if field_list longer
-#     # (Outlook exports this way). Also adds blank entry for
-#     # Mod Date column, if it didn't already exist.
-#     len_diff = len(field_list) - len(record_row)
-#     if len_diff > 0:
-#         record_row += [''] * len_diff
-#
-#     # print('Row %d in CSV. Length: %d' % (i, len(row)))
-#     record = pd.Series(record_row, index=field_list)
-#     # print('Record %s:' % i)
-#     # print(record.values)
-#
-#     # Parse name for series.
-#     firstn = record.get('First Name', None).lower()
-#     lastn = record.get('Last Name', None).lower()
-#     org = record.get('Organization',
-#           record.get('Company', None)).lower()
-#
-#     if firstn and lastn:
-#         name = lastn + ', ' + firstn
-#     elif firstn:
-#         name = firstn
-#     elif org:
-#         name = org
-#     else:
-#         raise ValueError('No first, last, or organization name for '
-#                             'record: %r' % record)
-#
-#     return {name: record}
+def field_list_mod(raw_field_list):
+    """
+    Takes in list with standard entries.
+    Adds 'Mod Date' field to end if not present.
+    Also modifies standard iPhone export field list to fix non-unique headings.
+    Returns list with unique entries.
+    """
+
+    mod_field_list = raw_field_list[:]
+
+    # Use 'iPhone' field existence to determine it's iPhone export.
+    if 'iPhone' in raw_field_list:
+        print('Type: iPhone')
+
+        # If CSV doesn't already have date-modified column, add it.
+        if not 'Mod Date' in raw_field_list:
+            mod_field_list += ['Mod Date']
+
+            # Assume file also has non-unize fields
+            # Check that number of non-unique fields hasn't changed.
+            assert mod_field_list.count('Home') == 4
+            assert mod_field_list.count('Work') == 4
+            assert mod_field_list.count('Email') == 4
+
+            # Make columns unique.
+            mod_field_list[mod_field_list.index('Work')] = 'Work [Phone]'
+            mod_field_list[mod_field_list.index('Home')] = 'Home [Phone]'
+
+            mod_field_list[mod_field_list.index('Home')] = 'Home [Email]'
+            mod_field_list[mod_field_list.index('Work')] = 'Work [Email]'
+
+            mod_field_list[mod_field_list.index('Email')] = 'Email [1]'
+            mod_field_list[mod_field_list.index('Email')] = 'Email [2]'
+            mod_field_list[mod_field_list.index('Email')] = 'Email [3]'
+            mod_field_list[mod_field_list.index('Email')] = 'Email [4]'
+
+            mod_field_list[mod_field_list.index('Home')] = 'Home [URL]'
+            mod_field_list[mod_field_list.index('Work')] = 'Work [URL]'
+
+            mod_field_list[mod_field_list.index('Home')] = 'Home [Address]'
+            mod_field_list[mod_field_list.index('Work')] = 'Work [Address]'
+
+        return mod_field_list
+
+
+    elif 'Telex' in raw_field_list:
+        print('Type: Outlook')
+
+        # If CSV doesn't already have date-modified column, add it.
+        if not 'Mod Date' in raw_field_list:
+            mod_field_list += ['Mod Date']
+            # Outlook fields already unique.
+
+        return mod_field_list
+
+    else:
+        print('Unrecognized field format:\n%r' % raw_field_list)
 
 
 def list_read(filename, start_line=2, end_line=None):
@@ -146,30 +126,16 @@ def list_read(filename, start_line=2, end_line=None):
         file_in = csv.reader(csvfile)
 
         # Get field names before entering loop
-        # field_list = file_in.__next__()
         field_list = file_in.__next__()
 
-        # If CSV doesn't already have date-modified column, add it.
-        if not 'Mod Date' in field_list:
-            field_list += ['Mod Date']
-
-        # Use 'iPhone' field to determine it's iPhone export.
-        # Make columns unique. Outlook fields already unique.
-        if 'iPhone' in field_list:
-            print('Type: iPhone')
-            field_list = field_list_mod(field_list)
-        elif 'Telex' in field_list:
-            print('Type: Outlook')
+        # Add 'Mod Date' field, make field names unique if necessary.
+        field_list = field_list_mod(field_list)
 
         record_dict = {}
         i = 2
 
         for row in file_in:
-            # print('Row %d of length %d:' % (i, len(row)))
-            # print(row)
-
             if i >= start_line:
-
                 row_record_series = RecordSeries(row, field_list)
                 record_dict.update(row_record_series.name_map())
 
@@ -178,7 +144,6 @@ def list_read(filename, start_line=2, end_line=None):
                 break
 
     df = pd.DataFrame(record_dict)
-    # print('Input CSV data as DataFrame:\n', df)
 
     return df.sort_index(axis=1)
 
