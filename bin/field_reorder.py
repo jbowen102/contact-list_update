@@ -119,7 +119,7 @@ def master_field_dict(map_type):
 #     print('%s\t-\t%s' % (k, map_dict[k]))
 
 
-def list_sort(df_to_sort, master_file='./master/TB_default_fields.csv'):
+def field_reorder(df_to_sort, master_file='./master/TB_default_fields.csv'):
     """
     Function to take in pandas DataFrame containing contact-data entries that
     need to be reordered relative to each other.
@@ -149,12 +149,16 @@ def list_sort(df_to_sort, master_file='./master/TB_default_fields.csv'):
     return df_sorted
 
 
-# list_sort test
+# field_reorder test
 import csv
 from list_read import list_read
+from list_combine import list_combine
 from list_write import list_write
 filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
 # filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
-df_in = list_read(filename1)
-df_sorted = list_sort(df_in)
-new_file = list_write(df_sorted, desc='iPhone_sort_12')
+filename3 = './input_data/MyContacts-2017-08-10-210940-230.csv'
+df_current = list_read(filename1)
+df_in = list_read(filename3)
+df_comb = list_combine(df_current, df_in)
+df_sorted = field_reorder(df_comb)
+new_file = list_write(df_sorted, desc='iPhone_comb+sort_01')

@@ -22,7 +22,7 @@ def series_compare(input_ser, current_ser):
     return (not input_str_hash == curr_str_hash)
 
 
-def list_add(df_current, df_input):
+def list_combine(df_current, df_input):
     """
     Function that takes in a pandas DataFrame of contacts and adds any new
     contacts that appear in a second DataFrame of contacts.
@@ -65,20 +65,18 @@ def list_add(df_current, df_input):
     return df_out.sort_index(axis=1)
 
 
-# list_read test
-from list_read import list_read
-from list_write import list_write
-from list_sort import master_field_list
-# filename1 = './master/Sample_iPhone_Export_2.csv'
-filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
-# filename1 = './master/2017-07-12_TSV_Contacts.csv'
-df_current = list_read(filename1)
-
-# filename2 = './input_data/Sample_iPhone_Export_3.csv'
-filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
-# filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
-df_input = list_read(filename2)
-
-df_out = list_add(df_current, df_input)
-
-new_file = list_write(df_out, desc='iPhone_test_9')
+# # list_read test
+# from list_read import list_read
+# from list_write import list_write
+# from field_reorder import master_field_list
+# # filename1 = './master/Sample_iPhone_Export_2.csv'
+# filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
+# # filename1 = './master/2017-07-12_TSV_Contacts.csv'
+# df_current = list_read(filename1)
+#
+# # filename2 = './input_data/Sample_iPhone_Export_3.csv'
+# filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
+# # filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
+# df_input = list_read(filename2)
+# df_out = list_combine(df_current, df_input)
+# new_file = list_write(df_out, desc='iPhone_test_9')
