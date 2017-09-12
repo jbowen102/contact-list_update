@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class master_fields(object):
+class MasterFields(object):
     """
     Class to store field order from a master list.
     "Master" fields should be ordered according to Thunderbird default import
@@ -112,7 +112,7 @@ def field_reorder(df_to_sort, master_file='./master/TB_default_fields.csv'):
     """
 
     # Create object to house TB master field order.
-    TB_master = master_fields(master_file)
+    TB_master = MasterFields(master_file)
     field_list = TB_master.master_list()
 
     # Look for fields unique to each type of export to infer the type.
@@ -149,4 +149,4 @@ df_current = list_read(filename1)
 df_in = list_read(filename3)
 df_comb = list_combine(df_current, df_in)
 df_sorted = field_reorder(df_comb)
-new_file = list_write(df_sorted, desc='iPhone_comb+sort_02')
+new_file = list_write(df_sorted, desc='iPhone_comb+sort_03')

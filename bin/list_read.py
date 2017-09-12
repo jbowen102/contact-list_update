@@ -42,43 +42,84 @@ def field_list_mod(raw_field_list):
     return mod_field_list
 
 
-def create_series(record_row, field_list):
-    """
-    Function that takes a contact-list record and field list as inputs
-    and creates a pandas Series with the list's column headings as the index.
-    Also parses the record's name
-    Returns 1-dict with the record name as key and record series as value.
-    """
+class RecordSeries(object):
 
-    # Pad end of row with blank entries if field_list longer
-    # (Outlook exports this way). Also adds blank entry for
-    # Mod Date column, if it didn't already exist.
-    len_diff = len(field_list) - len(record_row)
-    if len_diff > 0:
-        record_row += [''] * len_diff
+    def __init__(self, record_row, field_list):
+        self.record_row = record_row
+        self.field_list = field_list
+        # Pad end of row with blank entries if field_list longer
+        # (Outlook exports this way). Also adds blank entry for
+        # Mod Date column, if it didn't already exist.
+        len_diff = len(self.field_list) - len(self.record_row)
+        if len_diff > 0:
+            self.record_row += [''] * len_diff
 
-    # print('Row %d in CSV. Length: %d' % (i, len(row)))
-    record = pd.Series(record_row, index=field_list)
-    # print('Record %s:' % i)
-    # print(record.values)
+        # print('Row %d in CSV. Length: %d' % (i, len(row)))
+        self.record_series = pd.Series(self.record_row, index=self.field_list)
+        # print('Record %s:' % i)
+        # print(record.values)
 
-    # Parse name for series.
-    firstn = record.get('First Name', None).lower()
-    lastn = record.get('Last Name', None).lower()
-    org = record.get('Organization',
-          record.get('Company', None)).lower()
+    def get_series(self):
+        return self.record_series
 
-    if firstn and lastn:
-        name = lastn + ', ' + firstn
-    elif firstn:
-        name = firstn
-    elif org:
-        name = org
-    else:
-        raise ValueError('No first, last, or organization name for '
-                            'record %i' % i)
+    def name_map(self):
+        # Parse name for series.
+        self.firstn = self.record_series.get('First Name', None).lower()
+        self.lastn = self.record_series.get('Last Name', None).lower()
+        self.org = self.record_series.get('Organization',
+              self.record_series.get('Company', None)).lower()
 
-    return {name: record}
+        if self.firstn and self.lastn:
+            self.name = self.lastn + ', ' + self.firstn
+        elif self.firstn:
+            self.name = self.firstn
+        elif self.org:
+            self.name = self.org
+        else:
+            raise ValueError('No first, last, or organization name for '
+                                'record: %r' % self.record_series)
+
+        return {self.name: self.record_series}
+
+
+#
+# def create_series(record_row, field_list):
+#     """
+#     Function that takes a contact-list record and field list as inputs
+#     and creates a pandas Series with the list's column headings as the index.
+#     Also parses the record's name
+#     Returns 1-dict with the record name as key and record series as value.
+#     """
+#
+#     # Pad end of row with blank entries if field_list longer
+#     # (Outlook exports this way). Also adds blank entry for
+#     # Mod Date column, if it didn't already exist.
+#     len_diff = len(field_list) - len(record_row)
+#     if len_diff > 0:
+#         record_row += [''] * len_diff
+#
+#     # print('Row %d in CSV. Length: %d' % (i, len(row)))
+#     record = pd.Series(record_row, index=field_list)
+#     # print('Record %s:' % i)
+#     # print(record.values)
+#
+#     # Parse name for series.
+#     firstn = record.get('First Name', None).lower()
+#     lastn = record.get('Last Name', None).lower()
+#     org = record.get('Organization',
+#           record.get('Company', None)).lower()
+#
+#     if firstn and lastn:
+#         name = lastn + ', ' + firstn
+#     elif firstn:
+#         name = firstn
+#     elif org:
+#         name = org
+#     else:
+#         raise ValueError('No first, last, or organization name for '
+#                             'record: %r' % record)
+#
+#     return {name: record}
 
 
 def list_read(filename, start_line=2, end_line=None):
@@ -129,8 +170,8 @@ def list_read(filename, start_line=2, end_line=None):
 
             if i >= start_line:
 
-                name_record_dict = create_series(row, field_list)
-                record_dict.update(name_record_dict)
+                row_record_series = RecordSeries(row, field_list)
+                record_dict.update(row_record_series.name_map())
 
             i += 1
             if end_line and i > end_line:
