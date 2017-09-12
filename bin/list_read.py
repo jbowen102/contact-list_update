@@ -12,8 +12,6 @@ def field_list_mod(raw_field_list):
 
     mod_field_list = raw_field_list[:]
 
-    mod_field_list += ['Mod Date']
-
     # Check that number of non-unique fields hasn't changed.
     assert mod_field_list.count('Home') == 4
     assert mod_field_list.count('Work') == 4
@@ -110,11 +108,17 @@ def list_read(filename, start_line=2, end_line=None):
         # field_list = file_in.__next__()
         field_list = file_in.__next__()
 
-        # If CSV doesn't already have date-modified column, assume it is also
-        # has non-unique, unmodified columns. Make columns unique and add
-        # Mod Date column.
+        # If CSV doesn't already have date-modified column, add it.
         if not 'Mod Date' in field_list:
+            field_list += ['Mod Date']
+
+        # Use 'iPhone' field to determine it's iPhone export.
+        # Make columns unique. Outlook fields already unique.
+        if 'iPhone' in field_list:
+            print('Type: iPhone')
             field_list = field_list_mod(field_list)
+        elif 'Telex' in field_list:
+            print('Type: Outlook')
 
         record_dict = {}
         i = 2

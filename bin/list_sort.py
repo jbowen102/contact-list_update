@@ -11,7 +11,7 @@ def master_field_list(master_file='./master/TB_default_fields.csv'):
     Returns list with ordered field names
     """
     with open(master_file, 'r') as csvfile:
-        print('Reading master field order from CSV...')
+        print('Reading master TB field order from CSV...')
         file_in = csv.reader(csvfile)
 
         field_list = file_in.__next__()
@@ -119,7 +119,7 @@ def master_field_dict(map_type):
 #     print('%s\t-\t%s' % (k, map_dict[k]))
 
 
-def list_sort(df_to_sort, df_type, master_file='./master/TB_default_fields.csv'):
+def list_sort(df_to_sort, master_file='./master/TB_default_fields.csv'):
     """
     Function to take in pandas DataFrame containing contact-data entries that
     need to be reordered relative to each other.
@@ -128,7 +128,13 @@ def list_sort(df_to_sort, df_type, master_file='./master/TB_default_fields.csv')
     """
 
     field_list = master_field_list(master_file)
-    map_dict = master_field_dict(df_type)
+
+    # Look for fields unique to each type of export to infer the type.
+    if 'iPhone' in df_to_sort.index:
+        map_dict = master_field_dict('iPhone')
+    elif 'Telex' in df_to_sort.index:
+        map_dict = master_field_dict('Outlook')
+
     # Ensure Thunderbird headings match hard-coded dict keys
     assert set(field_list) == set(map_dict.keys())
 
@@ -136,7 +142,8 @@ def list_sort(df_to_sort, df_type, master_file='./master/TB_default_fields.csv')
     sorted_index = []
     for TB_field in field_list:
         sorted_index += [map_dict[TB_field]]
-    print(sorted_index)
+    # sorted_index += ['Mod Date']
+    # print(sorted_index)
 
     df_sorted = df_to_sort.reindex(index=sorted_index)
     return df_sorted
@@ -147,6 +154,7 @@ import csv
 from list_read import list_read
 from list_write import list_write
 filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
+# filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
 df_in = list_read(filename1)
-df_sorted = list_sort(df_in, df_type='iPhone')
-new_file = list_write(df_sorted, desc='iPhone_sort_1')
+df_sorted = list_sort(df_in)
+new_file = list_write(df_sorted, desc='iPhone_sort_12')
