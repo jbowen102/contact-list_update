@@ -1,6 +1,26 @@
+import time
 import csv
 import pandas as pd
 
+
+class TimeStamp(object):
+
+    def __init__(self):
+        # get date and time to put in filename
+        # These are integers
+        self.yr = time.localtime().tm_year
+        self.mon = time.localtime().tm_mon
+        self.day = time.localtime().tm_mday
+        self.hr = time.localtime().tm_hour
+        self.minute = time.localtime().tm_min
+        self.sec = time.localtime().tm_sec
+
+    def short_form(self):
+        return '%.4i-%.2i-%.2i' % (self.yr, self.mon, self.day)
+
+    def long_form(self):
+        return ('%.4i-%.2i-%.2i' % (self.yr, self.mon, self.day) + '_' +
+                '%.2i%.2i%.2i' % (self.hr, self.minute, self.sec))
 
 
 class RecordSeries(object):
@@ -21,6 +41,9 @@ class RecordSeries(object):
 
     def get_series(self):
         return self.record_series
+
+    def set_date(self, date_str):
+        self.record_series['Mod Date'] = date_str
 
     def name_map(self):
         "Returns a dict with series name as key and series as value"
@@ -137,6 +160,13 @@ def list_read(filename, start_line=2, end_line=None):
         for row in file_in:
             if i >= start_line:
                 row_record_series = RecordSeries(row, field_list)
+
+                # If there is no date in the Add/Mod Date column, add today's.
+                row_series = row_record_series.get_series()
+                if not row_series['Mod Date']:
+                    date_now = TimeStamp()
+                    row_record_series.set_date(date_now.short_form())
+
                 record_dict.update(row_record_series.name_map())
 
             i += 1

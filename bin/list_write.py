@@ -1,33 +1,6 @@
 import csv
 import pandas as pd
-from list_combine import TimeStamp
-
-
-# def date_time_str(form):
-#     """
-#     Inputs:
-#         form - 'short' for date only, 'long' for date and time.
-#     Returns string
-#     """
-#     # get date and time to put in filename
-#     # These are integers
-#     yr = time.localtime().tm_year
-#     mon = time.localtime().tm_mon
-#     day = time.localtime().tm_mday
-#     hr = time.localtime().tm_hour
-#     minute = time.localtime().tm_min
-#     sec = time.localtime().tm_sec
-#
-#     date_str = '%.4i-%.2i-%.2i' % (yr, mon, day)
-#     date_time_str = ('%.4i-%.2i-%.2i' % (yr, mon, day) + '_' +
-#                      '%.2i%.2i%.2i' % (hr, minute, sec))
-#
-#     if form == 'short':
-#         return date_str
-#     if form == 'long':
-#         return date_time_str
-#     else:
-#         raise ValueError("Input either 'short' or 'long'")
+from list_read import TimeStamp
 
 
 def list_write(data, desc=''):
@@ -77,18 +50,18 @@ def list_write(data, desc=''):
 # data = list_read(filename, start_line=3, end_line=10)
 # new_file = list_write(data, fields)
 
-# list_combine test
-from list_read import list_read
-from list_combine import list_combine
-# from list_write import list_write
-from field_reorder import MasterFields
-# filename1 = './master/Sample_iPhone_Export_2.csv'
-filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
-# filename1 = './master/2017-07-12_TSV_Contacts.csv'
-df_current = list_read(filename1)
-# filename2 = './input_data/Sample_iPhone_Export_3.csv'
-filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
-# filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
-df_input = list_read(filename2)
-df_out = list_combine(df_current, df_input)
-new_file = list_write(df_out, desc='iPhone_test_12')
+# # list_combine test
+# from list_read import list_read
+# from list_combine import list_combine
+# # from list_write import list_write
+# from field_reorder import MasterFields
+# # filename1 = './master/Sample_iPhone_Export_2.csv'
+# filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod_dates.csv'
+# # filename1 = './master/2017-07-12_TSV_Contacts.csv'
+# df_current = list_read(filename1)
+# # filename2 = './input_data/Sample_iPhone_Export_3.csv'
+# filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
+# # filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
+# df_input = list_read(filename2)
+# df_out = list_combine(df_current, df_input)
+# new_file = list_write(df_out, desc='iPhone_test_16')

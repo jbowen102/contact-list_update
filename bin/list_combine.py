@@ -1,26 +1,6 @@
-import time
 from hashlib import md5
 import pandas as pd
-
-
-class TimeStamp(object):
-
-    def __init__(self):
-        # get date and time to put in filename
-        # These are integers
-        self.yr = time.localtime().tm_year
-        self.mon = time.localtime().tm_mon
-        self.day = time.localtime().tm_mday
-        self.hr = time.localtime().tm_hour
-        self.minute = time.localtime().tm_min
-        self.sec = time.localtime().tm_sec
-
-    def short_form(self):
-        return '%.4i-%.2i-%.2i' % (self.yr, self.mon, self.day)
-
-    def long_form(self):
-        return ('%.4i-%.2i-%.2i' % (self.yr, self.mon, self.day) + '_' +
-                '%.2i%.2i%.2i' % (self.hr, self.minute, self.sec))
+from list_read import TimeStamp
 
 
 def series_compare(input_ser, current_ser):
@@ -30,8 +10,9 @@ def series_compare(input_ser, current_ser):
     Returns Boolean True if Series are different and False if equivalent.
     """
 
-    input_str = '|'.join(input_ser.values)
-    curr_str = '|'.join(current_ser.values)
+    # Exclude Mod Date field
+    input_str = '|'.join(input_ser.values[:-1])
+    curr_str = '|'.join(current_ser.values[:-1])
     input_str_rec = input_str.encode('utf-8')
     curr_str_rec = curr_str.encode('utf-8')
     input_str_hash = md5(input_str_rec).hexdigest()
@@ -66,7 +47,6 @@ def list_combine(df_current, df_input):
         # addition to old one, not replacing.
         if not ser_key in df_current.keys():
             df_out[ser_key] = df_input[ser_key]
-            df_out[ser_key]['Mod Date'] = date_now.short_form()
             new_rec += [ser_key]
             print('+ Added %s' % ser_key)
             continue
@@ -77,7 +57,7 @@ def list_combine(df_current, df_input):
         # If the two series are not exactly the same, use the new one.
         if str_mod:
             df_out[ser_key] = df_input[ser_key]
-            df_out[ser_key]['Mod Date'] = date_now.short_form()
+
             mod_rec += [ser_key]
             print('^ Modified %s' % ser_key)
 
