@@ -3,6 +3,28 @@ import pandas as pd
 from list_read import TimeStamp
 
 
+
+def field_list_compare(input_arr, current_arr):
+
+    # Exclude Mod Date field
+    if 'Mod Date' in input_arr:
+        input_str = '|'.join(input_arr[:-1])
+    else:
+        input_str = '|'.join(input_arr)
+
+    if 'Mod Date' in current_arr:
+        curr_str = '|'.join(current_arr[:-1])
+    else:
+        curr_str = '|'.join(current_arr)
+
+    input_str_rec = input_str.encode('utf-8')
+    curr_str_rec = curr_str.encode('utf-8')
+    input_str_hash = md5(input_str_rec).hexdigest()
+    curr_str_hash = md5(curr_str_rec).hexdigest()
+
+    return (input_str_hash == curr_str_hash)
+
+
 def series_compare(input_ser, current_ser):
     """
     Function that takes in two pandas Series objects with contact info and
@@ -11,8 +33,16 @@ def series_compare(input_ser, current_ser):
     """
 
     # Exclude Mod Date field
-    input_str = '|'.join(input_ser.values[:-1])
-    curr_str = '|'.join(current_ser.values[:-1])
+    if 'Mod Date' in input_ser.index:
+        input_str = '|'.join(input_ser.values[:-1])
+    else:
+        input_str = '|'.join(input_ser.values)
+
+    if 'Mod Date' in current_ser.index:
+        curr_str = '|'.join(current_ser.values[:-1])
+    else:
+        curr_str = '|'.join(current_ser.values)
+
     input_str_rec = input_str.encode('utf-8')
     curr_str_rec = curr_str.encode('utf-8')
     input_str_hash = md5(input_str_rec).hexdigest()
@@ -31,6 +61,12 @@ def list_combine(df_current, df_input):
     The key for each Series in the DataFrame is the First+Last Name, First
     Name only, or Organization name.
     """
+
+    # Check that new and current field lists are the same
+    same_fields = field_list_compare(df_input.index.values,
+                                    df_current.index.values)
+    if not same_fields:
+        raise ValueError('Cannot combine lists. Field list different.')
 
     # Create copy of current dataframe
     df_out = df_current.copy()
@@ -52,7 +88,7 @@ def list_combine(df_current, df_input):
             continue
 
         # Compare new and current records
-        str_mod = series_compare(df_input[ser_key], df_out[ser_key])
+        str_mod = series_compare(df_input[ser_key], df_current[ser_key])
 
         # If the two series are not exactly the same, use the new one.
         if str_mod:

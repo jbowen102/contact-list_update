@@ -145,7 +145,7 @@ def list_read(filename, start_line=2, end_line=None):
                 'start value')
 
     with open(filename, 'r') as csvfile:
-        print('Reading input data from CSV...')
+        print('Reading data from CSV...')
         file_in = csv.reader(csvfile)
 
         # Get field names before entering loop
