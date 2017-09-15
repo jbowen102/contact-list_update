@@ -33,6 +33,13 @@ class RecordSeries(object):
         len_diff = len(self.field_list) - len(self.record_row)
         if len_diff > 0:
             self.record_row += [''] * len_diff
+        # If iPhone export incorrectly parsed/delimmited, stop.
+        elif len_diff < 0:
+            print('Record-series length longer than field list by %d entries.'
+                                                                % len_diff)
+            print(self.record_row)
+            raise ValueError('Fix record in CSV file before continuing.')
+
         self.record_series = pd.Series(self.record_row, index=self.field_list)
 
     def get_series(self):
