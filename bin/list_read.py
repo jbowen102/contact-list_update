@@ -6,7 +6,7 @@ import pandas as pd
 class TimeStamp(object):
 
     def __init__(self):
-        # get date and time to put in filename
+        # Get date and time to put in filename
         # These are integers
         self.yr = time.localtime().tm_year
         self.mon = time.localtime().tm_mon
@@ -28,16 +28,12 @@ class RecordSeries(object):
         self.record_row = record_row
         self.field_list = field_list
         # Pad end of row with blank entries if field_list longer
-        # (Outlook exports this way). Also adds blank entry for
+        # (Outlook exports this way). Also add blank entry for
         # Mod Date column, if it didn't already exist.
         len_diff = len(self.field_list) - len(self.record_row)
         if len_diff > 0:
             self.record_row += [''] * len_diff
-
-        # print('Row %d in CSV. Length: %d' % (i, len(row)))
         self.record_series = pd.Series(self.record_row, index=self.field_list)
-        # print('Record %s:' % i)
-        # print(record.values)
 
     def get_series(self):
         return self.record_series
@@ -68,7 +64,7 @@ class RecordSeries(object):
 
 def field_list_mod(raw_field_list):
     """
-    Takes in list with standard entries.
+    Takes in row with standard field names.
     Adds 'Mod Date' field to end if not present.
     Also modifies standard iPhone export field list to fix non-unique headings.
     Returns list with unique entries.
@@ -84,7 +80,7 @@ def field_list_mod(raw_field_list):
         if not 'Mod Date' in raw_field_list:
             mod_field_list += ['Mod Date']
 
-            # Assume file also has non-unize fields
+            # Assume file also has non-unique fields
             # Check that number of non-unique fields hasn't changed.
             assert mod_field_list.count('Home') == 4
             assert mod_field_list.count('Work') == 4
@@ -117,7 +113,7 @@ def field_list_mod(raw_field_list):
         # If CSV doesn't already have date-modified column, add it.
         if not 'Mod Date' in raw_field_list:
             mod_field_list += ['Mod Date']
-            # Outlook fields already unique.
+        # Outlook fields already unique.
 
         return mod_field_list
 
@@ -142,13 +138,12 @@ def list_read(filename, start_line=2, end_line=None):
 
     if end_line and not end_line >= start_line:
         raise ValueError('End value must be greater than or equal to '
-                'start value')
+                'start value.')
 
     with open(filename, 'r') as csvfile:
         print('Reading data from CSV...')
         file_in = csv.reader(csvfile)
 
-        # Get field names before entering loop
         field_list = file_in.__next__()
 
         # Add 'Mod Date' field, make field names unique if necessary.
@@ -176,13 +171,3 @@ def list_read(filename, start_line=2, end_line=None):
     df = pd.DataFrame(record_dict)
 
     return df.sort_index(axis=1)
-
-
-# # list_read test
-# # filename = './input_data/Sample_iPhone_Export.csv'
-# # filename1 = './master/2017-07-12_TSV_Contacts.csv'
-# filename1 = './master/MyContacts-2017-08-10-210940-230_shortened.csv'
-# list_read(filename1, end_line=7)
-# print('\n' + '-'*80 + '\n')
-# filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
-# list_read(filename2, end_line=7)

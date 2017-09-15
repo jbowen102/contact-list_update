@@ -108,15 +108,15 @@ def field_reorder(df_to_sort, master_file='./master/TB_default_fields.csv'):
     """
     Function to take in pandas DataFrame containing contact-data entries that
     need to be reordered relative to each other.
-    The ordered_fields input should contain a list of correctly-ordered labels.
-    Returns DataFrame with reordered fields conforming to ordered_fields.
+    The master_file input should contain a list of correctly-ordered labels.
+    Returns DataFrame with reordered fields conforming to master_file.
     """
 
     # Create object to house TB master field order.
     TB_master = MasterFields(master_file)
     field_list = TB_master.master_list()
 
-    # Look for fields unique to each type of export to infer the type.
+    # Look for fields unique to each type of export to infer the export type.
     if 'iPhone' in df_to_sort.index:
         map_type = 'iPhone'
     elif 'Telex' in df_to_sort.index:
@@ -132,23 +132,7 @@ def field_reorder(df_to_sort, master_file='./master/TB_default_fields.csv'):
     sorted_index = []
     for TB_field in field_list:
         sorted_index += [map_dict[TB_field]]
-    # sorted_index += ['Mod Date']
-    # print(sorted_index)
 
+    # Sort alphabetically by labels and replace NaNs with blanks.
     df_sorted = df_to_sort.reindex(index=sorted_index)
-    # Replace NaNs with blanks
     return df_sorted.fillna('')
-
-
-# # field_reorder test
-# from list_read import list_read
-# from list_combine import list_combine
-# from list_write import list_write
-# filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
-# # filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
-# filename3 = './input_data/MyContacts-2017-08-10-210940-230.csv'
-# df_current = list_read(filename1)
-# df_in = list_read(filename3)
-# df_comb = list_combine(df_current, df_in)
-# df_sorted = field_reorder(df_comb)
-# new_file = list_write(df_sorted, desc='iPhone_comb+sort_03')

@@ -1,9 +1,13 @@
 from hashlib import md5
 import pandas as pd
-from bin.list_read import TimeStamp
 
 
 def field_list_compare(input_arr, current_arr):
+    """
+    Function that takes in two NumPy arrays, each with a list of column names
+    from a contact list. Compares the two (using md5 hash), returns True if
+    equivalent, False if different.
+    """
 
     # Exclude Mod Date field
     if 'Mod Date' in input_arr:
@@ -46,8 +50,6 @@ def series_compare(input_ser, current_ser):
     curr_str_rec = curr_str.encode('utf-8')
     input_str_hash = md5(input_str_rec).hexdigest()
     curr_str_hash = md5(curr_str_rec).hexdigest()
-    # print('\tCurrent: %s' % curr_str_rec)
-    # print('\t    New: %s' % input_str_rec)
 
     return (not input_str_hash == curr_str_hash)
 
@@ -67,13 +69,10 @@ def list_combine(df_current, df_input):
     if not same_fields:
         raise ValueError('Cannot combine lists. Field list different.')
 
-    # Create copy of current dataframe
+    # Create copy of current DataFrame
     df_out = df_current.copy()
-
     new_rec = []
     mod_rec = []
-
-    date_now = TimeStamp()
 
     for ser_key in df_input.keys():
 
@@ -87,12 +86,10 @@ def list_combine(df_current, df_input):
             continue
 
         # Compare new and current records
-        str_mod = series_compare(df_input[ser_key], df_current[ser_key])
-
         # If the two series are not exactly the same, use the new one.
+        str_mod = series_compare(df_input[ser_key], df_current[ser_key])
         if str_mod:
             df_out[ser_key] = df_input[ser_key]
-
             mod_rec += [ser_key]
             print('^ Modified %s' % ser_key)
 
@@ -100,20 +97,3 @@ def list_combine(df_current, df_input):
     print('\tEntries added (%d)' % len(new_rec))
     print('\tEntries modified (%d)' % len(mod_rec))
     return df_out.sort_index(axis=1)
-
-
-# # list_combine test
-# from list_read import list_read
-# from list_write import list_write
-# from field_reorder import MasterFields
-# # filename1 = './master/Sample_iPhone_Export_2.csv'
-# filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
-# # filename1 = './master/2017-07-12_TSV_Contacts.csv'
-# df_current = list_read(filename1)
-#
-# # filename2 = './input_data/Sample_iPhone_Export_3.csv'
-# filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
-# # filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
-# df_input = list_read(filename2)
-# df_out = list_combine(df_current, df_input)
-# new_file = list_write(df_out, desc='iPhone_test_10')

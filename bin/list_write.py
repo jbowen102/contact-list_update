@@ -37,33 +37,3 @@ def list_write(df_out, desc=None):
             new_file_csv.writerow(df_out[ser_key])
 
         return new_filename
-
-
-# # list_write test
-# from field_reorder import master_field_list
-# comment the above line out if using list_write in field_reorder
-# # Reads in the unsorted fields
-# fields = master_field_list('./input_data/Sample_iPhone_Export.csv')
-# # fields = master_field_list() # gets correct master list
-# # Data will not re-sort to the master list yet.
-# from list_read import list_read
-# filename = './input_data/Sample_iPhone_Export.csv'
-# data = list_read(filename, start_line=3, end_line=10)
-# new_file = list_write(data, fields)
-
-# # list_combine test
-# from list_read import list_read
-# from list_combine import list_combine
-# # from list_write import list_write
-# from field_reorder import MasterFields
-# # filename1 = './master/Sample_iPhone_Export_2.csv'
-# # filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod_dates.csv'
-# filename1 = './master/MyContacts-2017-08-10-210940-230_short_mod.csv'
-# # filename1 = './master/2017-07-12_TSV_Contacts.csv'
-# df_current = list_read(filename1)
-# # filename2 = './input_data/Sample_iPhone_Export_3.csv'
-# filename2 = './input_data/MyContacts-2017-08-10-210940-230.csv'
-# # filename2 = './input_data/2017-07-28_TSV_Contacts.csv'
-# df_input = list_read(filename2)
-# df_out = list_combine(df_current, df_input)
-# new_file = list_write(df_out, desc='iPhone_test_16')
