@@ -136,7 +136,8 @@ def field_reorder(df_to_sort, master_file='./master/TB_default_fields.csv'):
     # print(sorted_index)
 
     df_sorted = df_to_sort.reindex(index=sorted_index)
-    return df_sorted
+    # Replace NaNs with blanks
+    return df_sorted.fillna('')
 
 
 # # field_reorder test

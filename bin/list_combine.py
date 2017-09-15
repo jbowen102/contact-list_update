@@ -1,7 +1,6 @@
 from hashlib import md5
 import pandas as pd
-from list_read import TimeStamp
-
+from bin.list_read import TimeStamp
 
 
 def field_list_compare(input_arr, current_arr):
