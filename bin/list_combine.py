@@ -67,13 +67,15 @@ def list_combine(df_current, df_input):
     same_fields = field_list_compare(df_input.index.values,
                                     df_current.index.values)
     if not same_fields:
-        raise ValueError('Cannot combine lists. Field list different.')
+        raise ValueError('Cannot combine lists. Field lists different: \n%r\n%r'
+                            % (df_current.index.values, df_input.index.values))
 
     # Create copy of current DataFrame
     df_out = df_current.copy()
     new_rec = []
     mod_rec = []
 
+    print('\nSummary:')
     for ser_key in df_input.keys():
 
         # If any series key is not already in df_current, add it now.

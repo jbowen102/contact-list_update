@@ -39,7 +39,7 @@ while True:
                     'add entries to:\n>>>')
         df_current = lr.list_read(current_filename)
 
-        input_filename = input('Enter the filepath of new list:\n>>>')
+        input_filename = input('\nEnter the filepath of new list:\n>>>')
         df_input = lr.list_read(input_filename)
 
         df_out = lc.list_combine(df_current, df_input)

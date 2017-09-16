@@ -24,32 +24,12 @@ class TimeStamp(object):
 
 
 class RecordSeries(object):
-    def __init__(self, record_row, field_list):
+    def __init__(self, row_num, record_row, field_list):
+        self.row_num = row_num
         self.record_row = record_row
         self.field_list = field_list
-        # Pad end of row with blank entries if field_list longer
-        # (Outlook exports this way). Also add blank entry for
-        # Mod Date column, if it didn't already exist.
-        len_diff = len(self.field_list) - len(self.record_row)
-        if len_diff > 0:
-            self.record_row += [''] * len_diff
-        # If iPhone export incorrectly parsed/delimmited, stop.
-        elif len_diff < 0:
-            print('Record-series length longer than field list by %d entries.'
-                                                                % len_diff)
-            print(self.record_row)
-            raise ValueError('Fix record in CSV file before continuing.')
-
         self.record_series = pd.Series(self.record_row, index=self.field_list)
 
-    def get_series(self):
-        return self.record_series
-
-    def set_date(self, date_str):
-        self.record_series['Mod Date'] = date_str
-
-    def name_map(self):
-        "Returns a dict with series name as key and series as value"
         # Parse name for series.
         self.firstn = self.record_series.get('First Name', None).lower()
         self.lastn = self.record_series.get('Last Name', None).lower()
@@ -64,7 +44,22 @@ class RecordSeries(object):
             self.name = self.org
         else:
             raise ValueError('No first, last, or organization name for '
-                                'record: %r' % self.record_series)
+                'row-%d record: \n\n%r' % (self.row_num, self.record_series))
+
+    def get_row_num(self):
+        return self.row_num
+
+    def get_series(self):
+        return self.record_series
+
+    def set_date(self, date_str):
+        self.record_series['Mod Date'] = date_str
+
+    def get_name(self):
+        return self.name
+
+    def name_map(self):
+        "Returns a dict with series name as key and series as value"
 
         return {self.name: self.record_series}
 
@@ -77,6 +72,7 @@ def field_list_mod(raw_field_list):
     Returns list with unique entries.
     """
 
+    print("Field list pre-modify: \n%r" % raw_field_list)
     mod_field_list = raw_field_list[:]
 
     # Use 'iPhone' field existence to determine it's iPhone export.
@@ -161,7 +157,31 @@ def list_read(filename, start_line=2, end_line=None):
 
         for row in file_in:
             if i >= start_line:
-                row_record_series = RecordSeries(row, field_list)
+
+                # Pad end of row with blank entries if field_list longer
+                # (Outlook exports this way). Also add blank entry for
+                # Mod Date column, if it didn't already exist.
+                len_diff = len(row) - len(field_list)
+                skip_series = 'no'
+                if len_diff < 0:
+                    row += [''] * -len_diff
+                # If iPhone export incorrectly parsed/delimmited, stop.
+                # If a Mod Date value already exists, it will be 10 char long.
+                elif len_diff > 0 or not len(row[-1]) == 10:
+                    print('\nRecord-series %d length longer than field list by '
+                                '%d entries:' % (i, len_diff+1))
+                    print(row)
+                    skip_series = input('Press Y to skip or another key to exit:\n>>>')
+
+                    if skip_series.lower() == 'y':
+                        continue
+                    else:
+                        raise ValueError('Fix record %d in CSV file before '
+                                            'continuing.' % i)
+
+                row_record_series = RecordSeries(i, row, field_list)
+
+                print('%d: %s' % (i, row_record_series.get_name()))
 
                 # If there is no date in the Add/Mod Date column, add today's.
                 row_series = row_record_series.get_series()
