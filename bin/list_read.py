@@ -182,7 +182,7 @@ def list_read(filename, start_line=2, end_line=None):
 
                 row_record_series = RecordSeries(i, row, field_list)
 
-                print('%d: %s' % (i, row_record_series.get_name()))
+                # print('%d: %s' % (i, row_record_series.get_name()))
 
                 # If there is no date in the Add/Mod Date column, add today's.
                 row_series = row_record_series.get_series()

@@ -133,6 +133,12 @@ def field_reorder(df_to_sort, master_file='./master/TB_default_fields.csv'):
     for TB_field in field_list:
         sorted_index += [map_dict[TB_field]]
 
-    # Sort alphabetically by labels and replace NaNs with blanks.
+    # Sort alphabetically by labels
     df_sorted = df_to_sort.reindex(index=sorted_index)
+
+    # Populate Display Name TB field so entries display correctly.
+    for ser_name in df_sorted.keys().values:
+        df_sorted[ser_name]['[TB_Display Name]'] = ser_name
+
+    # Replace NaNs with blanks.
     return df_sorted.fillna('')
