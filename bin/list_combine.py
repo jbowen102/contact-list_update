@@ -35,6 +35,7 @@ def series_compare(input_ser, current_ser):
     Returns Boolean True if Series are different and False if equivalent.
     """
 
+
     # Exclude Mod Date field
     if 'Mod Date' in input_ser.index:
         input_str = '|'.join(input_ser.values[:-1])
@@ -46,10 +47,20 @@ def series_compare(input_ser, current_ser):
     else:
         curr_str = '|'.join(current_ser.values)
 
+    # Remove trailing newline characters if they exist.
+    if '\n' in input_str:
+        input_str = input_str[:input_str.index('\n')]
+    if '\n' in curr_str:
+        curr_str = curr_str[:curr_str.index('\n')]
+
     input_str_rec = input_str.encode('utf-8')
     curr_str_rec = curr_str.encode('utf-8')
     input_str_hash = md5(input_str_rec).hexdigest()
     curr_str_hash = md5(curr_str_rec).hexdigest()
+
+    if not (input_str_hash == curr_str_hash):
+        print('\nPrevious combined string:\n%s' % curr_str_rec)
+        print('New combined string:\n%s\n' % input_str_rec)
 
     return (not input_str_hash == curr_str_hash)
 

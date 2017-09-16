@@ -171,9 +171,10 @@ def list_read(filename, start_line=2, end_line=None):
                     print('\nRecord-series %d length longer than field list by '
                                 '%d entries:' % (i, len_diff+1))
                     print(row)
-                    skip_series = input('Press Y to skip or another key to exit:\n>>>')
+                    skip_series = input('Press S to skip or another key to exit:\n>>>')
 
-                    if skip_series.lower() == 'y':
+                    if skip_series.lower() == 's':
+                        i += 1
                         continue
                     else:
                         raise ValueError('Fix record %d in CSV file before '
