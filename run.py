@@ -11,7 +11,8 @@ from bin import list_write as lw
 while True:
     prog = input("Type 'r' to enter the Reformat program.\n"
         "Type 'c' to enter the Combine program.\n"
-        "Type 'h' for help.\n>>>")
+        "Type 'h' for help.\n"
+        "Type 'q' to quit.\n>>> ")
 
     if prog.lower() == 'r':
         print('\t', '*' * 10, 'Reformat program', '*' * 10)
@@ -51,7 +52,9 @@ while True:
 
     elif prog.lower() == 'h':
         print('No help available yet')
-        pass
+
+    elif prog.lower() == 'q':
+        quit()
 
     else:
-        print("Invalid response. Only inputs accepted are 'r', 'c', or 'h'.")
+        print("Invalid response. Only inputs accepted are 'r', 'c', 'h', or 'q'.")
