@@ -35,7 +35,6 @@ def series_compare(input_ser, current_ser):
     Returns Boolean True if Series are different and False if equivalent.
     """
 
-
     # Exclude Mod Date field
     if 'Mod Date' in input_ser.index:
         input_str = '|'.join(input_ser.values[:-1])

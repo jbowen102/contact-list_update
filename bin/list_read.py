@@ -142,6 +142,8 @@ def list_read(filename, start_line=2, end_line=None):
     if end_line and not end_line >= start_line:
         raise ValueError('End value must be greater than or equal to '
                 'start value.')
+        # Checks to make sure end_line passed to functionn isn't smaller than
+        # start_line.
 
     with open(filename, 'r') as csvfile:
         print('Reading data from CSV...')
