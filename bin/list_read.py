@@ -1,6 +1,10 @@
 import time
 import csv
 import pandas as pd
+# For opening CSV that needs to be re-saved:
+from subprocess import Popen, PIPE
+from os import devnull
+#
 
 
 class TimeStamp(object):
@@ -144,6 +148,17 @@ def list_read(filename, start_line=2, end_line=None):
                 'start value.')
         # Checks to make sure end_line passed to functionn isn't smaller than
         # start_line.
+
+    # Test for Windows unicode issue:
+    try:
+        with open(filename, 'r') as csvfile_test:
+            test_buffer = list(csv.reader(csvfile_test))
+    except UnicodeDecodeError:
+        FNULL = open(devnull, 'w')
+        Popen(['xdg-open', filename], stdout=FNULL, stderr=PIPE)
+        input('\nUnicode Decode Error in CSV File. Re-save file and press '
+        'Enter when finished:\n>>> ')
+
 
     with open(filename, 'r') as csvfile:
         print('Reading data from CSV...')
