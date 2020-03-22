@@ -18,14 +18,15 @@ def list_write(df_out, desc=None):
     fields = df_out.index.values
 
     date_time_now = TimeStamp()
-    new_filename = './output_data/' + date_time_now.long_form() + desc + '.csv'
+    new_filename = date_time_now.long_form() + desc + '.csv'
+    new_filepath = './output_data/' + new_filename
 
     # If data is only one row, modify the iterable so it writes correctly.
     if isinstance(df_out[0:1], str):
         df_out = [df_out, []]
 
     # Create new CSV file to write to
-    with open(new_filename, 'w+', newline='') as new_file:
+    with open(new_filepath, 'w+', newline='') as new_file:
         new_file_csv = csv.writer(new_file)
 
         print('Writing data to CSV...')

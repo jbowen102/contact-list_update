@@ -105,7 +105,6 @@ def list_combine(df_current, df_input):
             mod_rec += [ser_key]
             print('^ Modified %s' % ser_key)
 
-    print('\n' + '#' * 10 + 'Update finished' + '#' * 10)
-    print('\tEntries added (%d)' % len(new_rec))
-    print('\tEntries modified (%d)' % len(mod_rec))
+    print('\tEntries to be added (%d)' % len(new_rec))
+    print('\tEntries to be modified (%d)' % len(mod_rec))
     return df_out.sort_index(axis=1)

@@ -81,7 +81,8 @@ def field_list_mod(raw_field_list):
 
     # Use 'iPhone' field existence to determine it's iPhone export.
     if 'iPhone' in raw_field_list:
-        print('Type: iPhone')
+        list_type = 'iPhone'
+        print('Type: %s' % list_type)
 
         # If CSV doesn't already have date-modified column, add it.
         if not 'Mod Date' in raw_field_list:
@@ -111,18 +112,18 @@ def field_list_mod(raw_field_list):
             mod_field_list[mod_field_list.index('Home')] = 'Home [Address]'
             mod_field_list[mod_field_list.index('Work')] = 'Work [Address]'
 
-        return mod_field_list
-
+        return [list_type, mod_field_list]
 
     elif 'Telex' in raw_field_list:
-        print('Type: Outlook')
+        list_type = 'Outlook'
+        print('Type: %s' % list_type)
 
         # If CSV doesn't already have date-modified column, add it.
         if not 'Mod Date' in raw_field_list:
             mod_field_list += ['Mod Date']
         # Outlook fields already unique.
 
-        return mod_field_list
+        return [list_type, mod_field_list]
 
     else:
         print('Unrecognized field format:\n%r' % raw_field_list)
@@ -159,15 +160,14 @@ def list_read(filename, start_line=2, end_line=None):
         input('\nUnicode Decode Error in CSV File. Re-save file and press '
         'Enter when finished:\n>>> ')
 
-
     with open(filename, 'r') as csvfile:
         print('Reading data from CSV...')
         file_in = csv.reader(csvfile)
 
-        field_list = file_in.__next__()
+        raw_field_list = file_in.__next__()
 
         # Add 'Mod Date' field, make field names unique if necessary.
-        field_list = field_list_mod(field_list)
+        [list_type, field_list] = field_list_mod(raw_field_list)
 
         record_dict = {}
         i = 2
@@ -215,4 +215,4 @@ def list_read(filename, start_line=2, end_line=None):
 
     df = pd.DataFrame(record_dict)
 
-    return df.sort_index(axis=1)
+    return [list_type, df.sort_index(axis=1)]

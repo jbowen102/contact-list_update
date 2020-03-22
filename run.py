@@ -2,6 +2,7 @@ import time
 import csv
 from os import listdir
 from os.path import exists as path_exists
+from os.path import basename as path_basename   # returns file or dir at end of path
 from hashlib import md5
 import pandas as pd
 from bin import list_read as lr
@@ -13,12 +14,15 @@ from bin import list_write as lw
 class InputDirectoryError(Exception):
     pass
 
+class ListTypeError(Exception):
+    pass
+
 
 def combine_prog():
     print('*' * 10, 'Combine program', '*' * 10)
     current_filename = input("Enter the filepath of current master list to "
                 "add entries to:\n>>> ")
-    df_current = lr.list_read(current_filename)
+    [current_list_type, df_current] = lr.list_read(current_filename)
 
     input_filename = input("\nEnter the filepath of new import list or press "
         "Enter to use default\n (whatever lone file is in the 'input_files' "
@@ -27,19 +31,31 @@ def combine_prog():
     if input_filename == "":
         avail_input_files = listdir('./input_data/')
         if len(avail_input_files) == 1:
-            df_input = lr.list_read('./input_data/' + avail_input_files[0])
+            [input_list_type, df_input] = lr.list_read('./input_data/' + avail_input_files[0])
         else:
             raise InputDirectoryError("There must be exactly one file in the 'input_data' dir.")
     elif path_exists(input_filename):
-        df_input = lr.list_read(input_filename)
+        [input_list_type, df_input] = lr.list_read(input_filename)
     else:
         raise InputDirectoryError("Invalid response. Start over.")
 
+    if not input_list_type == current_list_type:
+        raise ListTypeError("Input list type and master don't match.")
+
     df_out = lc.list_combine(df_current, df_input)
 
-    desc = input("Enter a description for output-file name (like 'iPhone' or "
-                "'Outlook') or press Enter for none:\n>>> ")
-    new_file = lw.list_write(df_out, desc)
+    while True:
+        confirm = input("Review pending changes. Press Enter to output "
+                        "a new master file or Q to quit:\n>>> ")
+        if confirm == "":
+            new_file = lw.list_write(df_out, current_list_type + "_master")
+            print("New master list (in SOURCE format) %s written to output_data "
+            "directory. Consider copying to master directory." % new_file)
+            break
+        elif confirm == "q":
+            quit()
+        else:
+            print("Invalid response. Try again.\n")
 
 
 def reformat_prog():
@@ -54,11 +70,12 @@ def reformat_prog():
     if reorder_filename == "":
         avail_input_files = listdir('./input_data/')
         if len(avail_input_files) == 1:
-            df_to_reorder = lr.list_read('./input_data/' + avail_input_files[0])
+            reorder_filename = avail_input_files[0]
+            [input_list_type, df_to_reorder] = lr.list_read('./input_data/' + avail_input_files[0])
         else:
             raise InputDirectoryError("There must be exactly one file in the 'input_data' dir.")
     elif path_exists(reorder_filename):
-        df_to_reorder = lr.list_read(reorder_filename)
+        [input_list_type, df_to_reorder] = lr.list_read(reorder_filename)
     else:
         raise InputDirectoryError("Invalid response. Start over.")
 
@@ -67,9 +84,14 @@ def reformat_prog():
     else:
         df_out = fr.field_reorder(df_to_reorder)
 
-    desc = input("Enter a description for output-file name (like 'iPhone' "
-                "or 'Outlook') or press Enter for none:\n>>> ")
+    if "master" in path_basename(reorder_filename):
+        desc = input_list_type + "_master_TB_format"
+    else:
+        desc = input_list_type + "_TB_format"
     new_file = lw.list_write(df_out, desc)
+
+    print("Reformatted list (in TB format) %s written to output_data "
+          "folder." % new_file)
 
 
 while True:
@@ -82,6 +104,7 @@ while True:
 
     if prog.lower() == 'cr':
         combine_prog()
+        print("\n\n22")
         reformat_prog()
         break
 
