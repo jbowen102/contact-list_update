@@ -93,66 +93,71 @@ def reformat_prog():
     print("Reformatted list (in TB format) %s written to output_data "
           "folder." % new_file)
 
+if __name__ == "__main__":
+    # Don't run if module being imported. Only if script being run directly.
+    while True:
+        prog = input(
+            "Type 'cr' to run Combine program then Reformat (std iPhone workflow).\n"
+            "Type 'r' to run Reformat program only (std Outlook workflow).\n"
+            "Type 'c' to enter the Combine program only.\n"
+            "Type 'h' for help.\n"
+            "Type 'q' to quit.\n>>> ")
 
-while True:
-    prog = input(
-        "Type 'cr' to run Combine program then Reformat (std iPhone workflow).\n"
-        "Type 'r' to run Reformat program only (std Outlook workflow).\n"
-        "Type 'c' to enter the Combine program only.\n"
-        "Type 'h' for help.\n"
-        "Type 'q' to quit.\n>>> ")
+        if prog.lower() == 'cr':
+            combine_prog()
+            print("\n\n22")
+            reformat_prog()
+            break
 
-    if prog.lower() == 'cr':
-        combine_prog()
-        print("\n\n22")
-        reformat_prog()
-        break
+        elif prog.lower() == 'r':
+            reformat_prog()
+            break
 
-    elif prog.lower() == 'r':
-        reformat_prog()
-        break
+        elif prog.lower() == 'c':
+            combine_prog()
+            break
 
-    elif prog.lower() == 'c':
-        combine_prog()
-        break
+        elif prog.lower() == 'h':
+            print("\nCombine program (typically only used with iPhone exports):\n"
+            "\t-The Combine program is used to update a CSV master list of "
+                            "contacts with newly-added or modified entries \n"
+            "\t\tfound in an input CSV file recently exported.\n"
+            "\t-The formats supported are iPhone- and Outlook-generated CSV exports.\n"
+            "\t-Intent is to accept and combine input and master lists in "
+                                                "SOURCE format, not TB format.\n"
+            "\t-Before running, check input CSV for anomalies. Correct in input "
+                                    "file or on source device (and re-export)\n"
+            "\t\tbefore proceeding with program.\n"
+            "\t-Place a copy of input file in 'input_data' directory.\n"
+            "\t-Ensure the most recent master list CSV is in the 'master' directory.\n"
+            "\t-Program will ask for name of input and master lists (which do "
+                                "not need to be in the program directories).\n"
+            "\t-Program will combine to make a new master list with the union "
+                                        "of records found in the two files. \n"
+            "\t-Any new records found in input file will be added to master "
+                                    "list, and any that have been modified \n"
+            "\t\tsince last combine will replace the previous versions in the "
+                                                                "master list.\n"
+            "\t-New master list will be written to new file in output_data directory.\n"
+            "\t-After verifying that output CSV is valid, manually copy new master "
+                                        "list to master dir for future use.\n"
+            "\t-(The Assumption is that contacts will not be deleted from "
+                                    "Outlook. No combining needed, because \n"
+            "\t\tinput list always should include previously-seen records.)\n"
 
-    elif prog.lower() == 'h':
-        print("\nCombine program (typically only used with iPhone exports):\n"
-        "\t-The Combine program is used to update a CSV master list of contacts with "
-        "newly-added or modified entries \n"
-        "\t\tfound in an input CSV file recently exported.\n"
-        "\t-The formats supported are iPhone- and Outlook-generated CSV exports.\n"
-        "\t-Intent is to accept and combine input and master lists in SOURCE format, not TB format.\n"
-        "\t-Before running, check input CSV for anomolies. Correct in input "
-        "file or on source device (and re-export) \n"
-        "\t\tbefore proceeding with program.\n"
-        "\t-Place a copy of input file in 'input_data' directory.\n"
-        "\t-Ensure the most recent master list CSV is in the 'master' directory.\n"
-        "\t-Program will ask for name of input and master lists (which do not "
-        "need to be in the program directories).\n"
-        "\t-Program will combine to make a new master list with the union of records "
-        "found in the two files. \n"
-        "\t-Any new records found in input file will be added to master list, and "
-        "any that have been modified \n"
-        "\t\tsince last combine will replace the previous versions in the master list.\n"
-        "\t-New master list will be written to new file in output_data directory.\n"
-        "\t-After verifying that output CSV is valid, manually copy new master list "
-        "to master dir for future use.\n"
-        "\t-(The Assumption is that contacts will not be deleted from Outlook. "
-        "No combining needed, because \n"
-        "\t\tinput list always should include previously-seen records.)\n"
+            "\nReformat program (used with both iPhone and Outlook exports):\n"
+            "\t-The Reformat program accepts either input data type (iPhone or "
+                                                            "Outlook export).\n"
+            "\t-Place a copy of input file in 'input_data' directory (ideally, "
+                                                        "new master list).\n"
+            "\t-The input data is then reformatted according to TB master field list.\n"
+            "\t-Its fields are renamed and reordered according to the TB convention.\n"
+            "\t-New reformatted list will be written to new file in output_data "
+                                                            "directory.\n\n")
 
-        "\nReformat program (used with both iPhone and Outlook exports):\n"
-        "\t-The Reformat program accepts either input data type (iPhone or Outlook export).\n"
-        "\t-Place a copy of input file in 'input_data' directory.\n"
-        "\t-The input data is then reformatted according to TB master field list.\n"
-        "\t-Its fields are renamed and reordered according to the TB convention.\n"
-        "\t-New reformatted list will be written to new file in output_data directory.\n\n")
+        elif prog.lower() == 'q':
+            quit()
 
-
-    elif prog.lower() == 'q':
-        quit()
-
-    else:
-        print("Invalid response. Only inputs accepted are 'cr', 'r', 'c', 'h', "
-                                                                "or 'q'.")
+        else:
+            print("Invalid response. Only inputs accepted are 'cr', 'r', 'c', 'h', "
+                                                                    "or 'q'.")
